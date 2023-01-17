@@ -1,0 +1,7 @@
+.main__synthesis{
+   font-family: 'Anton';
+   font-size: 104px;
+   color: var(--colorBrand);
+   margin: 0;
+   user-select: none;
+}

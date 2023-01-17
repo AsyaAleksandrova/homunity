@@ -1,0 +1,10 @@
+.mypage{
+   margin: 0;
+   --colorBackground: #394650;
+   --colorMain: #E7E6E9;
+   --colorBrand: #D89540;
+   --colorLightAccent: #969BA2;
+   --colorDarkAccent: #925F61;
+   padding-top: 50px;
+   min-height: calc(100vh - 50px);
+}

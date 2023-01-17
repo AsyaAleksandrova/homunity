@@ -1,0 +1,8 @@
+.header__form{
+   width: 200px;
+   height: 28px;
+   display: flex;
+   flex-direction: row;
+   align-items: center;
+   position: relative;
+}

@@ -1,0 +1,8 @@
+.mypage__family{
+   width: 87%;
+   margin: 40px auto 20px;
+   padding: 20px;
+   background-color: #9E9C8F;
+   border-radius: 5px;
+   box-shadow: 5px 5px 15px var(--colorLightAccent);
+}

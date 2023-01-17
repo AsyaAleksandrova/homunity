@@ -1,0 +1,11 @@
+.root {
+   margin: 0;
+   width: 100vw;
+   --colorBackground: #394650;
+   --colorMain: #E7E6E9;
+   --colorBrand: #D89540;
+   --colorLightAccent: #969BA2;
+   --colorDarkAccent: #925F61;
+   background-color: var(--colorMain);
+   color: var(--colorBackground);
+}

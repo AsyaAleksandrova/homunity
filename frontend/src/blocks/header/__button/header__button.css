@@ -1,0 +1,11 @@
+.header__button{
+   cursor: pointer;
+   background-color: transparent;
+   border: none;
+   margin: 0 10px 0 0;
+   transition: all 0.5s ease;
+}
+
+.header__button:hover{
+   transform: scale(1.1);
+}

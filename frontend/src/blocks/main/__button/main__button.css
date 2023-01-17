@@ -1,0 +1,22 @@
+.main__button{
+   width: 160px;
+   height: 45px;
+   border: none;
+   border-radius: 7px;
+   color: var(--colorMain);
+   font-family: 'Exo2';
+   font-size: 20px;
+   font-weight: 300;
+   transition: all ease 0.5s;
+   cursor: pointer;
+}
+
+.main__button:hover{
+   transform: scale(1.03);
+   box-shadow: 3px 3px 5px gray;
+}
+
+.main__button:active{
+   transform: scale(1);
+   box-shadow: 3px 0 5px gray;
+}

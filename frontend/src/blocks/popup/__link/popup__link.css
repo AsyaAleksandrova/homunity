@@ -1,0 +1,6 @@
+.popup__link{
+   border: none;
+   background-color: transparent;
+   color: var(--colorBrand);
+   cursor: pointer;
+}

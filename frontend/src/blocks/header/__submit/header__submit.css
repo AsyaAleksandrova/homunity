@@ -1,0 +1,8 @@
+.header__submit{
+   position: absolute;
+   right: 5px;
+   top: 5px;
+   background-color: transparent;
+   border: none;
+   cursor: pointer;
+}

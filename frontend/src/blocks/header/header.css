@@ -1,0 +1,24 @@
+.header{
+   --colorBackground: #394650;
+   --colorMain: #E7E6E9;
+   --colorBrand: #D89540;
+   --colorLightAccent: #969BA2;
+   --colorDarkAccent: #925F61;
+   position: fixed;
+   height: 60px;
+   width: 100vw;
+   background: linear-gradient(0deg, rgba(255, 255, 255, 0) 0%, var(--colorBackground) 90%);
+   box-shadow: 0px 0px 5px var(--colorLightAccent);
+   backdrop-filter: blur(5px);
+   display: flex;
+   flex-direction: row;
+   gap: 20px;
+   align-items: center;
+   justify-content: space-between;
+   padding: 10px 40px;
+   box-sizing: border-box;
+}
+
+.header_hidden{
+   visibility: hidden;
+}

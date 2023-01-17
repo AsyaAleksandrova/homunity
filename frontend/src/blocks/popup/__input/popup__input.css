@@ -1,0 +1,96 @@
+.popup__input{
+   width: 300px;
+   height: 30px;
+   border: none;
+   font-family: 'Exo2';
+   font-size: 16px;
+   color: var(--colorBackground);
+   padding-left: 5px;
+   background: transparent;
+   margin-top: 10px;
+   margin-bottom: 10px;
+}
+
+.popup__input:focus{
+   outline: 0;
+   outline-offset: 0;
+}
+
+.popup__input-container{
+   position: relative;
+   width: 300px;
+}
+
+.popup__input-label{
+   position: absolute;
+   top: 0px;
+   left: 0;
+   width: 309px;
+   height: 42px;
+   color: var(--colorBackground);
+   background-color: #dfdfdf;
+   display: flex;
+   align-items: center;
+   z-index: -2;
+}
+
+.popup__input-label_valid{
+   background-image: url(../../../images/free-icon-font-check.png);
+   background-size: 20px;
+   background-repeat: no-repeat;
+   background-position: 95% 50%;
+}
+
+.popup__input-label::before{
+   content: '';
+   position: absolute;
+   z-index: 5;
+   top: 0px;
+   left: 0px;
+   width: 50px;
+   height: 10px;
+   border-top: 1.5px solid #925F61;
+   border-left: 1.5px solid #925F61;
+   transition: 0.5s ease;
+}
+
+.popup__input-label::after {
+   content: '';
+   position: absolute;
+   z-index: 5;
+   bottom: 0px;
+   right: 0px;
+   width: 50px;
+   height: 10px;
+   border-bottom: 1.5px solid #925F61;
+   border-right: 1.5px solid #925F61;
+   transition: 0.5s ease;
+}
+
+.popup__input:focus+.popup__input-label::before,
+.popup__input:focus+.popup__input-label::after {
+   width: calc(100% - 2px);
+   height: calc(100% - 2px);
+}
+
+.popup__input-label_valid::after,
+.popup__input-label_valid::before {
+   border-color: #3d5731;
+}
+
+.popup__input-placeholder{
+   z-index: -1;
+   position: absolute;
+   top: 14px;
+   left: 0px;
+   padding-left: 8px;
+   width: 300px;
+   color: #909296;
+   font-family: 'Exo2';
+   font-size: 16px;
+}
+
+.popup__input-placeholder_active{
+   font-size: 12px;
+   top: 2px;
+}

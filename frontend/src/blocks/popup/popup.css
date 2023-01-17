@@ -1,0 +1,20 @@
+.popup{
+   position: fixed;
+   top: 0;
+   left: 0;
+   background-color: rgba(57, 70, 80, 0.5);;
+   width: 100%;
+   height: 100%;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   z-index: 1;
+   opacity: 0;
+   visibility: hidden;
+   transition: all 0.7s ease;
+   --colorBackground: #394650;
+   --colorMain: #E7E6E9;
+   --colorBrand: #D89540;
+   --colorLightAccent: #969BA2;
+   --colorDarkAccent: #925F61;
+}

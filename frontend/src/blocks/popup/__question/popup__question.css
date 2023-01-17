@@ -1,0 +1,7 @@
+.popup__question{
+   color: var(--colorBackground);
+   font-family: 'Exo2';
+   font-size: 14px;
+   user-select: none;
+   margin: 0 0 10px;
+}

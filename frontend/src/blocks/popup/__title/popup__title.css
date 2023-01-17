@@ -1,0 +1,8 @@
+.popup__title{
+   color: var(--colorBackground);
+   font-family: 'Exo2';
+   font-size: 20px;
+   font-weight: 400;
+   margin: 20px 0 10px 0;
+   user-select: none;
+}

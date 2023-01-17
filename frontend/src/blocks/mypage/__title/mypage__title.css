@@ -1,0 +1,10 @@
+.mypage__title{
+   color: var(--colorMain);
+   font-family: 'Exo2';
+   font-weight: 400;
+   font-size: 24px;
+   margin: 0;
+   width: 100%;
+   padding-bottom: 2px;
+   border-bottom: 1px solid var(--colorMain);
+}
