@@ -21,7 +21,7 @@ function App() {
   const isOpen = isLoginPopupOpen || isRegisterPopupOpen || isInfoPopupOpen;
   const [currentUser, setCurrentUser] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
-  const [currentLogin, setCurrentLogin] = useState({ mame: '', email: '', token: '', _id: '' });
+  //const [currentLogin, setCurrentLogin] = useState({ mame: '', email: '', token: '', _id: '' });
 
   const registerUser = ({ name, email, password}) => {
     return api.register(name, email, password)
@@ -35,27 +35,75 @@ function App() {
         setIsInfoPopupOpen(true);
         history.push('/');
       })
-      .catch(api.catchError);
+      .catch((e) => {
+        api.catchError(e);
+        setIsRegisterPopupOpen(false);
+        setInfoTitle('Ошибка регистрации');
+        switch(e.status) {
+          case 409:
+            setInfoMessage('Пользователь с таким email уже зарегистрирован.');
+            setIsInfoPopupOpen(true);
+            break;
+          case 400:
+            setInfoMessage('Переданые некорректные данные при создании пользователя.');
+            setIsInfoPopupOpen(true);
+            break;
+          default:
+            setInfoMessage('Что-то пошло не так. Попробуйте повторить запрос.');
+            setIsInfoPopupOpen(true);
+            break;
+        }
+      });
   }
 
   const loginUser = ({ email, password}) => {
     return api.login(email, password)
       .then((res) => {
-        localStorage.setItem('jwt', res.token );
-        setCurrentLogin({ ...currentLogin, token: res.token });
+        localStorage.setItem('user', res._id );
         setCurrentUser(res.name, res.email, res._id);
         setLoggedIn(true);
         history.push('/');
         setIsLoginPopupOpen(false);
       })
-      .catch(api.catchError);
+      .catch((e) => {
+        api.catchError(e);
+        setIsRegisterPopupOpen(false);
+        setInfoTitle('Ошибка входа');
+        switch(e.status) {
+          case 401:
+            setInfoMessage('Некорректно указаны почта и/или пароль.');
+            setIsInfoPopupOpen(true);
+            break;
+          case 403:
+            setInfoMessage('Для продолжения перейдите по направленной ссылке для подтвеждения email. Мы отправили ссылку повторно.');
+            setIsInfoPopupOpen(true);
+            break;          
+          default:
+            setInfoMessage('Что-то пошло не так. Попробуйте повторить запрос.');
+            setIsInfoPopupOpen(true);
+            break;
+        }
+      });
   }
 
-  //useEffect(() => {
-    // if (getCookie('refreshToken')) {
-    //   setLoggedIn(true)
-    // }
-  //}, [])
+  const getAppData = () => {
+    Promise.all([api.getUserInfo(localStorage.getItem('user'))])
+      .then(([user]) => {
+        setCurrentUser(user);
+        setLoggedIn(true);
+      })
+      .catch((e) => {
+        api.catchError(e);
+        setIsRegisterPopupOpen(false);
+        setInfoTitle('Ошибка получения данных о пользователе');
+        setInfoMessage('Что-то пошло не так. Попробуйте повторить запрос.');
+        setIsInfoPopupOpen(true);
+      }); 
+  }
+
+  useEffect(() => {
+    getAppData();
+  }, [])
   
   const handleLoginClick = () => {
     closeAllPopups();

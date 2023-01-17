@@ -34,7 +34,6 @@ function LoginPopup({ isOpen, onClose, onSubmit, register }) {
          setIsChangedEmail(false)
          setEmailError('Поле не может быть пустым')
       }
-      checkButton();
    }, [email]);
    
    useEffect(() => {
@@ -52,8 +51,11 @@ function LoginPopup({ isOpen, onClose, onSubmit, register }) {
          setIsChangedPass(false)
          setPasswordError('Поле не может быть пустым')
       }
-      checkButton();
    }, [password]); 
+
+   useEffect(() => {
+      checkButton();
+   }, [emailError, passwordError])   
 
    function handleBlur(e) {
       switch (e.target.name) {

@@ -11,6 +11,7 @@ const ValidationError = require('../errors/ValidationError');
 const OtherServerError = require('../errors/OtherServerError');
 const NotFoundError = require('../errors/NotFoundError');
 const AuthError = require('../errors/AuthError');
+const ForbiddenError = require('../errors/ForbiddenError');
 const MESSAGE_AUTH = 'Неправильные почта или пароль';
 
 module.exports.createUser = (req, res, next) => {
@@ -22,9 +23,9 @@ module.exports.createUser = (req, res, next) => {
       const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_KEY : 'dev-secret', { expiresIn: '1d' });
       res
         .status(201)
-        //.cookie('refreshToken', token, { maxAge: 24 * 60 * 60 * 1000 })
+        .cookie('refreshToken', token, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true, SameSite:'None', Secure:true })
         .send({
-          user: { name: user.name, email: user.email, _id: user._id, confirmed: user.confirmed, token }
+          user: { name: user.name, email: user.email, _id: user._id, confirmed: user.confirmed }
         });
     })
     .catch((err) => {
@@ -44,7 +45,10 @@ module.exports.confirmEmail = (req, res, next) => {
     .findOneAndUpdate({activationlink}, {confirmed: true}, { new: true, runValidators: true })
     .orFail()
     .then((user) => {
-      res.redirect(FRONT_ORIGIN);
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_KEY : 'dev-secret', { expiresIn: '30d' });
+      res
+        .cookie('refreshToken', token, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true, SameSite:'None', Secure:true , domain: FRONT_ORIGIN })
+        .redirect(FRONT_ORIGIN);
     })
     .catch((err) => {
       if (err.name === 'DocumentNotFoundError') {
@@ -65,12 +69,18 @@ module.exports.login = (req, res, next) => {
         if (!compare) {
           next(new AuthError(MESSAGE_AUTH));
         } else {
-          const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_KEY : 'dev-secret', { expiresIn: '30d' });
-          res
-            .status(200)
-            //.cookie('refreshToken', token, { maxAge: 30 * 24 * 60 * 60 * 1000 })
-            .send({ name: user.name, email: user.email, _id: user._id, token });
-        }
+          if (!user.confirmed) {
+            MailService.sendActivationMail(user);
+            next(new ForbiddenError('Для продолжения перейдите по направленной ссылке для подтвеждения email. Мы отправили ссылку повторно.'));
+          }
+          else {
+            const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_KEY : 'dev-secret', { expiresIn: '30d' });
+            res
+              .status(200)
+              .cookie('refreshToken', token, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true, SameSite: true })
+              .send({ name: user.name, email: user.email, _id: user._id });
+          }
+          }
       }))
     .catch((err) => {
       if (err.name === 'DocumentNotFoundError') {
@@ -78,5 +88,17 @@ module.exports.login = (req, res, next) => {
       } else {
         next(new OtherServerError(`Что-то пошло не так: ${err.message}`));
       }
+    });
+};
+
+module.exports.getMyUser = (req, res, next) => {
+  User
+    .findById(req.params.id)
+    .orFail()
+    .then((user) => {
+      res.status(200).send(user);
+    })
+    .catch((err) => {
+      next(new OtherServerError(`Что-то пошло не так: ${err.message}`));
     });
 };

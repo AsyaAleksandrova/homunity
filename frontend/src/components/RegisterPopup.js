@@ -38,18 +38,17 @@ function RegisterPopup({ isOpen, onClose, onSubmit, login }) {
       if (name !== '') {
          setIsChangedUser(true);
          if (name.length < 2) {
-            setNameError('Имя не может быть меньше 2 символов')
+            setNameError('Имя не может быть меньше 2 символов');
          } else if (name.length > 30) {
-            setNameError('Имя не может быть больше 30 символов')
+            setNameError('Имя не может быть больше 30 символов');
          } else {
-            setNameError('')
+            setNameError('');
          }   
       }
       else {
          setIsChangedUser(false)
-         setNameError('Поле не может быть пустым')
-      }
-      checkButton();
+         setNameError('Поле не может быть пустым');
+      }     
    }, [name]);
 
    useEffect(() => {
@@ -58,46 +57,51 @@ function RegisterPopup({ isOpen, onClose, onSubmit, login }) {
          const reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
          if (reg.test(email) === false) {
             setEmailError('Некорректнный Email')
-         } else setEmailError('')
+         } else {
+            setEmailError('');
+         }
       }
       else {
          setIsChangedEmail(false)
-         setEmailError('Поле не может быть пустым')
-      }
-      checkButton();
+         setEmailError('Поле не может быть пустым');
+      }     
    }, [email]);
    
    useEffect(() => {
       if (password !== '') {
          setIsChangedPass(true);
          if (password.length < 8) {
-            setPasswordError('Пароль не может быть меньше 8 символов')
+            setPasswordError('Пароль не может быть меньше 8 символов');
          } else if (password.length > 30) {
-            setPasswordError('Пароль не может быть больше 30 символов')
+            setPasswordError('Пароль не может быть больше 30 символов');
          } else {
-            setPasswordError('')
+            setPasswordError('');
          }   
       }
       else {
          setIsChangedPass(false)
-         setPasswordError('Поле не может быть пустым')
-      }
-      checkButton();
+         setPasswordError('Поле не может быть пустым');
+      }   
    }, [password]);   
 
    useEffect(() => {
       if (confirmPassword !== '') {
          setIsChangedConfirmPass(true);
          if (confirmPassword !== password) {
-            setConfirmPasswordError('Пароли не совпадают')
-         } else setConfirmPasswordError('')
+            setConfirmPasswordError('Пароли не совпадают');
+         } else {
+            setConfirmPasswordError('');
+         }
       }
       else {
          setIsChangedConfirmPass(false)
-         setConfirmPasswordError('Поле не может быть пустым')
+         setConfirmPasswordError('Поле не может быть пустым');
       }
-      checkButton();
    }, [confirmPassword, password]);    
+
+   useEffect(() => {
+      checkButton();
+   }, [nameError, emailError, passwordError, confirmPasswordError])
 
    function handleBlur(e) {
       switch (e.target.name) {
@@ -117,9 +121,11 @@ function RegisterPopup({ isOpen, onClose, onSubmit, login }) {
    }
 
    function checkButton() {
-      if (!nameError && !emailError && !passwordError && !confirmPasswordError) {
+      if (nameError==='' & emailError==='' & passwordError==='' & confirmPasswordError==='') {
          setDisableButton(false)
-      } else setDisableButton(true)
+      } else {
+         setDisableButton(true);
+      }
    }
 
    function handleSubmit(e) {

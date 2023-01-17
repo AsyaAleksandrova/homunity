@@ -1,27 +1,30 @@
+import axios from 'axios';
+
 class Api {
   constructor(options) {
      this._url = options.baseUrl;
      this._headersJson = {
         'Content-Type': 'application/json',
-        'credentials': 'include'
      }
   }
 
    _checkResponse(res) {
       if (res.ok) {    
          return res.json();
-      }
-         return Promise.reject(`Ошибка ${res.status}`);
+      } else
+         return Promise.reject(res);
+         
    }
 
    catchError(err) {
-      console.log(err);
+      console.error(`Ошибка ${err.status}`);
    }
    
    register(name, email, password) {
       const setUrl = this._url + '/signup'
       return fetch(setUrl,{
          method: 'POST',
+         credentials: 'include',
          headers: this._headersJson,
          body: JSON.stringify({
             name: name,
@@ -36,16 +39,25 @@ class Api {
       const setUrl = this._url + '/signin'
       return fetch(setUrl,{
          method: 'POST',
+         credentials: 'include',
          headers: this._headersJson,
          body: JSON.stringify({email, password})
       })
          .then((response => response.json()))
          .then((data) => {
-            if (data.token){
-               return data;
-            } 
+            return data;
          })
    };
+
+   getUserInfo(user) {
+      const setUrl = this._url + '/users/me/' + user
+      return fetch(setUrl, {
+         method: 'GET',
+         credentials: 'include',
+         headers: this._headersJson,
+      })
+      .then(this._checkResponse)      
+   }
 }
 
 export const api = new Api({
