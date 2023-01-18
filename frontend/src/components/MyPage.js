@@ -1,13 +1,24 @@
 import React from 'react';
+import { useEffect } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPersonCirclePlus } from '@fortawesome/free-solid-svg-icons';
 import { faBinoculars } from '@fortawesome/free-solid-svg-icons';
 import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
 import { faUserMinus } from '@fortawesome/free-solid-svg-icons';
+import Header from './Header';
 
-function MyPage() {
+
+function MyPage({loggedIn, logOut, getAppData, currentUser}) {
+
+  // useEffect(() => {
+  //   getAppData();
+  // }, [])
+
+
+
   return (
     <main className="root">
+      <Header loggedIn={loggedIn} logOut={logOut} currentUser={ currentUser } />
       <section className="mypage">
         <div className='mypage__family'>
           <h2 className='mypage__title'>Моя семья</h2>

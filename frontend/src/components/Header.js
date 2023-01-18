@@ -8,9 +8,9 @@ import { faDoorOpen } from '@fortawesome/free-solid-svg-icons';
 import { faUserGroup } from '@fortawesome/free-solid-svg-icons';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
-function Header({loggedIn, currentUser}) {
+function Header({ loggedIn, logOut, currentUser }) {
    const className = `header ${!loggedIn && 'header_hidden'}`;
-   const [search, setSearch, handleChangeSearch ] = useForm('');
+   const [search, setSearch, handleChangeSearch] = useForm('');
 
    return (
       <header className={className}>
@@ -23,14 +23,15 @@ function Header({loggedIn, currentUser}) {
             <button type='button' className='header__button'><FontAwesomeIcon icon={faBell} style={{ color: '#394650' }} transform="grow-5" /></button>
          </div>
          <div className='header__menu'>
-            <button type='button' className='header__button'><FontAwesomeIcon icon={faEnvelope} style={{ color: '#394650' }} transform="grow-10" /></button>
-            <button type='button' className='header__button'><FontAwesomeIcon icon={faUserGroup} style={{ color: '#394650' }} transform="grow-7" /></button>
-            <button type='button' className='header__button'><FontAwesomeIcon icon={faCircleUser} style={{ color: '#394650' }} transform="grow-10" /></button>
-            <button type='button' className='header__button'><FontAwesomeIcon icon={faDoorOpen} style={{ color: '#394650' }} transform="grow-9" /></button>
+            <button type='button' className='header__button'><FontAwesomeIcon icon={faEnvelope} style={{ color: '#394650' }} transform="grow-15" /></button>
+            <button type='button' className='header__button'><FontAwesomeIcon icon={faUserGroup} style={{ color: '#394650' }} transform="grow-10" /></button>
+            <button type='button' className='header__button'><FontAwesomeIcon icon={faCircleUser} style={{ color: '#394650' }} transform="grow-15" /></button>
+            <button onClick={logOut} type='button' className='header__button'><FontAwesomeIcon icon={faDoorOpen} style={{ color: '#394650' }} transform="grow-14" /></button>
+            
          </div>
          
       </header>
-   );
+   )
 }
 
 export default Header;

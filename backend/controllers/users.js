@@ -20,17 +20,11 @@ module.exports.createUser = (req, res, next) => {
     .then((hash) => User.create({ ...req.body, password: hash, activationlink: `${process.env.BACK_ORIGIN}/activate/${activationlink}` }))
     .then((user) => MailService.sendActivationMail(user))
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_KEY : 'dev-secret', { expiresIn: '1d' });
-      res
-        .status(201)
-        .cookie('refreshToken', token, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true, SameSite:'None', Secure:true })
-        .send({
-          user: { name: user.name, email: user.email, _id: user._id, confirmed: user.confirmed }
-        });
+      res.status(201).send({user: user});
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new ValidationError(`Переданые некорректные данные при создании пользователя: ${err.message}`));
+        next(new ValidationError(`Переданы некорректные данные при создании пользователя: ${err.message}`));
       } else if (err.code === MONGO_DUPLICATE_ERROR_CODE) {
         next(new ConflictError('Пользователь с таким email уже зарегистрирован'));
       } else {
@@ -47,8 +41,9 @@ module.exports.confirmEmail = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_KEY : 'dev-secret', { expiresIn: '30d' });
       res
+        .status(200)
+        .redirect(`${FRONT_ORIGIN}`)
         .cookie('refreshToken', token, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true, SameSite:'None', Secure:true , domain: FRONT_ORIGIN })
-        .redirect(FRONT_ORIGIN);
     })
     .catch((err) => {
       if (err.name === 'DocumentNotFoundError') {
@@ -69,17 +64,17 @@ module.exports.login = (req, res, next) => {
         if (!compare) {
           next(new AuthError(MESSAGE_AUTH));
         } else {
-          if (!user.confirmed) {
-            MailService.sendActivationMail(user);
-            next(new ForbiddenError('Для продолжения перейдите по направленной ссылке для подтвеждения email. Мы отправили ссылку повторно.'));
-          }
-          else {
+          // if (user.confirmed) {
             const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_KEY : 'dev-secret', { expiresIn: '30d' });
             res
               .status(200)
               .cookie('refreshToken', token, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true, SameSite: true })
-              .send({ name: user.name, email: user.email, _id: user._id });
-          }
+              .send({user: user});
+          // }
+          // else {
+          //   MailService.sendActivationMail(user);
+          //   next(new ForbiddenError('Для продолжения перейдите по направленной ссылке для подтвеждения email. Мы отправили ссылку повторно.'));
+          // }
           }
       }))
     .catch((err) => {
@@ -91,10 +86,22 @@ module.exports.login = (req, res, next) => {
     });
 };
 
+module.exports.logout = (req, res, next) => {
+  User
+    .findById(req.user._id)
+    .then((user) => {
+      console.log(user)
+      res.clearCookie('refreshToken', { httpOnly: true })
+      res.status(200).json({message: "OK"})
+    })
+    .catch((err) => {
+      next(new OtherServerError(`Что-то пошло не так: ${err.message}`));
+    });
+};
+
 module.exports.getMyUser = (req, res, next) => {
   User
-    .findById(req.params.id)
-    .orFail()
+    .findById(req.user._id)
     .then((user) => {
       res.status(200).send(user);
     })

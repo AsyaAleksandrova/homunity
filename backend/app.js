@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors')
 const { errors } = require('celebrate');
-const { login, createUser, confirmEmail, getMyUser } = require('./controllers/users');
+const { login, logout, createUser, confirmEmail, getMyUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const validateNewUser = require('./middlewares/validateNewUser');
 const validateAuth = require('./middlewares/validateAuth');
@@ -32,7 +32,8 @@ mongoose.connect(MONGO_SERVER, {
 
 app.post('/signup', validateNewUser, createUser);
 app.get('/activate/:link', confirmEmail)
-app.post('/signin', validateAuth, login);
+app.post('/login', validateAuth, login);
+app.delete('/logout', auth, logout);
 app.use('/users/me/:id', auth, getMyUser);
 
 app.use((req, res, next) => {

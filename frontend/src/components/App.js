@@ -1,14 +1,13 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
-import { api } from '../utils/api';
+import * as auth from '../utils/auth';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import ProtectedRoute from './ProtectedRoute';
 import Main from './Main';
 import RegisterPopup from "./RegisterPopup";
 import LoginPopup from "./LoginPopup";
 import InformPopup from "./InformPopup";
-import Header from './Header';
 import MyPage from './MyPage';
 
 function App() {
@@ -24,7 +23,7 @@ function App() {
   //const [currentLogin, setCurrentLogin] = useState({ mame: '', email: '', token: '', _id: '' });
 
   const registerUser = ({ name, email, password}) => {
-    return api.register(name, email, password)
+    return auth.register(name, email, password)
       .then((res) => {
         setLoggedIn(true);
         setIsRegisterPopupOpen(false);
@@ -33,77 +32,75 @@ function App() {
         Просьба перейти по ссылке для подтверждения адреса почты и активации аккаунта.
         Мы не хотим терять с вами связь на случай утраты пароля.`);
         setIsInfoPopupOpen(true);
-        history.push('/');
       })
       .catch((e) => {
-        api.catchError(e);
         setIsRegisterPopupOpen(false);
         setInfoTitle('Ошибка регистрации');
         switch(e.status) {
-          case 409:
-            setInfoMessage('Пользователь с таким email уже зарегистрирован.');
-            setIsInfoPopupOpen(true);
+          case 409: setInfoMessage('Пользователь с таким email уже зарегистрирован.');
             break;
-          case 400:
-            setInfoMessage('Переданые некорректные данные при создании пользователя.');
-            setIsInfoPopupOpen(true);
+          case 400: setInfoMessage('Переданые некорректные данные при создании пользователя.');
             break;
-          default:
-            setInfoMessage('Что-то пошло не так. Попробуйте повторить запрос.');
-            setIsInfoPopupOpen(true);
+          default: setInfoMessage('Что-то пошло не так. Попробуйте повторить запрос.');
             break;
         }
+        setIsInfoPopupOpen(true);
       });
   }
 
   const loginUser = ({ email, password}) => {
-    return api.login(email, password)
+    return auth.login(email, password)
       .then((res) => {
-        localStorage.setItem('user', res._id );
-        setCurrentUser(res.name, res.email, res._id);
+        localStorage.setItem('user_id', res.user._id );
+        setCurrentUser(res.user.name, res.user.email, res.user._id);
         setLoggedIn(true);
         history.push('/');
         setIsLoginPopupOpen(false);
       })
       .catch((e) => {
-        api.catchError(e);
         setIsRegisterPopupOpen(false);
         setInfoTitle('Ошибка входа');
         switch(e.status) {
-          case 401:
-            setInfoMessage('Некорректно указаны почта и/или пароль.');
-            setIsInfoPopupOpen(true);
+          case 401: setInfoMessage('Некорректно указаны почта и/или пароль.');
             break;
-          case 403:
-            setInfoMessage('Для продолжения перейдите по направленной ссылке для подтвеждения email. Мы отправили ссылку повторно.');
-            setIsInfoPopupOpen(true);
+          case 403: setInfoMessage('Для продолжения перейдите по направленной ссылке для подтвеждения email. Мы отправили ссылку повторно.');
             break;          
-          default:
-            setInfoMessage('Что-то пошло не так. Попробуйте повторить запрос.');
-            setIsInfoPopupOpen(true);
+          default: setInfoMessage('Что-то пошло не так. Попробуйте повторить запрос.');
             break;
         }
+        setIsInfoPopupOpen(true);
       });
   }
 
+  const logOut = () => {
+    return auth.logout()
+      .then((res) => {
+        localStorage.removeItem('user_id');
+        setCurrentUser({ name: '', email: '', _id: '' });
+        setLoggedIn(false);
+        console.log('Я вышел')
+        console.log(localStorage)
+      })
+      .catch((e) => {
+        setInfoTitle('Ошибка');
+        setInfoMessage('Что-то пошло не так. Попробуйте повторить запрос.');
+        setIsInfoPopupOpen(true);
+      })
+  } 
+
   const getAppData = () => {
-    Promise.all([api.getUserInfo(localStorage.getItem('user'))])
+    Promise.all([auth.getProfile(localStorage.getItem('user_id'))])
       .then(([user]) => {
         setCurrentUser(user);
         setLoggedIn(true);
       })
       .catch((e) => {
-        api.catchError(e);
         setIsRegisterPopupOpen(false);
         setInfoTitle('Ошибка получения данных о пользователе');
         setInfoMessage('Что-то пошло не так. Попробуйте повторить запрос.');
         setIsInfoPopupOpen(true);
       }); 
   }
-
-  useEffect(() => {
-    getAppData();
-  }, [])
   
   const handleLoginClick = () => {
     closeAllPopups();
@@ -139,12 +136,14 @@ function App() {
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      <Header loggedIn={loggedIn} currentUser={currentUser} />
-      <Switch>  
+      <Switch>         
         <ProtectedRoute
-            exact path="/"
-            loggedIn={loggedIn}
-            component={MyPage} /> 
+          exact path="/"
+          loggedIn={loggedIn}
+          logOut={logOut}
+          getAppData={getAppData}
+          component={MyPage}
+        /> 
 
         <Route path="/main">
           <Main handleLoginClick={handleLoginClick} handleRegisterClick={handleRegisterClick} />
