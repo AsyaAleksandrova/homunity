@@ -43,13 +43,10 @@ export const logout = () => {
          })
 };
 
-
-export const getProfile = (user) => {
-   return fetch(`${BASE_URL}/users/me/ ${user._id}`, {
+export const checkToken = (id) => {
+   return fetch(`${BASE_URL}/users/me/${id}`, {
       method: 'GET',
-      credentials: 'include',
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({user})
+      credentials: 'include'
    })
       .then((response) => {
          if (response.ok) {    

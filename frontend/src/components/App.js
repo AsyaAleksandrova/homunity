@@ -5,6 +5,7 @@ import * as auth from '../utils/auth';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import ProtectedRoute from './ProtectedRoute';
 import Main from './Main';
+import Accept from './Accept'
 import RegisterPopup from "./RegisterPopup";
 import LoginPopup from "./LoginPopup";
 import InformPopup from "./InformPopup";
@@ -25,7 +26,6 @@ function App() {
   const registerUser = ({ name, email, password}) => {
     return auth.register(name, email, password)
       .then((res) => {
-        setLoggedIn(true);
         setIsRegisterPopupOpen(false);
         setInfoTitle('Регистрация прошла успешно');
         setInfoMessage(`Мы отправили вам письмо на адрес ${res.user.email}. 
@@ -88,19 +88,43 @@ function App() {
       })
   } 
 
-  const getAppData = () => {
-    Promise.all([auth.getProfile(localStorage.getItem('user_id'))])
-      .then(([user]) => {
-        setCurrentUser(user);
+  const getUser = (id) => {
+    return auth.checkToken(id)
+      .then((res) => {
+        localStorage.setItem('user_id', res.user._id );
+        setCurrentUser(res.user.name, res.user.email, res.user._id);
         setLoggedIn(true);
+        history.push('/');         
+        setInfoTitle('Регистрация завершена');
+        setInfoMessage('Ваш Email подтвержден. Спасибо за регистрацию на сайте!');
+        setIsInfoPopupOpen(true);
       })
       .catch((e) => {
-        setIsRegisterPopupOpen(false);
-        setInfoTitle('Ошибка получения данных о пользователе');
-        setInfoMessage('Что-то пошло не так. Попробуйте повторить запрос.');
+        history.push('/main');
+        setInfoTitle('Регистрация завершена');
+        switch(e.status) {
+          case 401: setInfoMessage('Необходима авторизация.');
+            break;
+          default: setInfoMessage('Что-то пошло не так. Попробуйте повторить запрос.');
+            break;
+        }
         setIsInfoPopupOpen(true);
-      }); 
-  }
+      });
+   }
+
+  // const getAppData = () => {
+  //   Promise.all([auth.getProfile(localStorage.getItem('user_id'))])
+  //     .then(([user]) => {
+  //       setCurrentUser(user);
+  //       setLoggedIn(true);
+  //     })
+  //     .catch((e) => {
+  //       setIsRegisterPopupOpen(false);
+  //       setInfoTitle('Ошибка получения данных о пользователе');
+  //       setInfoMessage('Что-то пошло не так. Попробуйте повторить запрос.');
+  //       setIsInfoPopupOpen(true);
+  //     }); 
+  // }
   
   const handleLoginClick = () => {
     closeAllPopups();
@@ -141,13 +165,15 @@ function App() {
           exact path="/"
           loggedIn={loggedIn}
           logOut={logOut}
-          getAppData={getAppData}
           component={MyPage}
         /> 
 
         <Route path="/main">
           <Main handleLoginClick={handleLoginClick} handleRegisterClick={handleRegisterClick} />
         </Route> 
+        <Route path="/accept">
+          <Accept getUser={ getUser } />
+        </Route>         
 
       </Switch>
 

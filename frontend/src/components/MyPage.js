@@ -8,7 +8,7 @@ import { faUserMinus } from '@fortawesome/free-solid-svg-icons';
 import Header from './Header';
 
 
-function MyPage({loggedIn, logOut, getAppData, currentUser}) {
+function MyPage({loggedIn, logOut, currentUser}) {
 
   // useEffect(() => {
   //   getAppData();

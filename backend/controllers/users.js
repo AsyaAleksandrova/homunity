@@ -20,7 +20,11 @@ module.exports.createUser = (req, res, next) => {
     .then((hash) => User.create({ ...req.body, password: hash, activationlink: `${process.env.BACK_ORIGIN}/activate/${activationlink}` }))
     .then((user) => MailService.sendActivationMail(user))
     .then((user) => {
-      res.status(201).send({user: user});
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_KEY : 'dev-secret', { expiresIn: '10d' });
+      res
+        .cookie('refreshToken', token, { maxAge: 10 * 24 * 60 * 60 * 1000, httpOnly: true, SameSite: 'Lax', Secure: true })
+        .status(201)
+        .send({ user: { name: user.name, email: user.email, _id: user._id } });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -39,11 +43,7 @@ module.exports.confirmEmail = (req, res, next) => {
     .findOneAndUpdate({activationlink}, {confirmed: true}, { new: true, runValidators: true })
     .orFail()
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_KEY : 'dev-secret', { expiresIn: '30d' });
-      res
-        .status(200)
-        .redirect(`${FRONT_ORIGIN}`)
-        .cookie('refreshToken', token, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true, SameSite:'None', Secure:true , domain: FRONT_ORIGIN })
+      res.status(200).redirect(`${FRONT_ORIGIN}/accept/${user._id}`)
     })
     .catch((err) => {
       if (err.name === 'DocumentNotFoundError') {
@@ -68,7 +68,7 @@ module.exports.login = (req, res, next) => {
             const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_KEY : 'dev-secret', { expiresIn: '30d' });
             res
               .status(200)
-              .cookie('refreshToken', token, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true, SameSite: true })
+              .cookie('refreshToken', token, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true, SameSite: 'Lax', Secure: true })
               .send({user: user});
           // }
           // else {
@@ -103,7 +103,11 @@ module.exports.getMyUser = (req, res, next) => {
   User
     .findById(req.user._id)
     .then((user) => {
-      res.status(200).send(user);
+      if (user._id.toString() === req.params.id) {
+        res.status(200).send({user: user });
+      } else {
+        next(new AuthError('Необходима авторизация'));
+      }
     })
     .catch((err) => {
       next(new OtherServerError(`Что-то пошло не так: ${err.message}`));
