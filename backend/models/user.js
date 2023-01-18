@@ -24,11 +24,12 @@ const userSchema = new mongoose.Schema({
   confirmed: {
     type: Boolean,
     default: false,
-    select: false,
   },
   activationlink: {
     type: String,
-    select: false,
+  },
+  refreshlink: {
+    type: String,
   },
 });
 

@@ -8,6 +8,7 @@ import Main from './Main';
 import Accept from './Accept'
 import RegisterPopup from "./RegisterPopup";
 import LoginPopup from "./LoginPopup";
+import RefreshPassPopup from './RefreshPassPopup';
 import InformPopup from "./InformPopup";
 import MyPage from './MyPage';
 
@@ -15,13 +16,13 @@ function App() {
   const history = useHistory();
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
   const [isRegisterPopupOpen, setIsRegisterPopupOpen] = useState(false);
+  const [isRefreshPassPopupOpen, setIsRefreshPassPopupOpen] = useState(false);
   const [isInfoPopupOpen, setIsInfoPopupOpen] = useState(false);
   const [infoTitle, setInfoTitle] = useState('');
   const [infoMessage, setInfoMessage] = useState('');
   const isOpen = isLoginPopupOpen || isRegisterPopupOpen || isInfoPopupOpen;
   const [currentUser, setCurrentUser] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
-  //const [currentLogin, setCurrentLogin] = useState({ mame: '', email: '', token: '', _id: '' });
 
   const registerUser = ({ name, email, password}) => {
     return auth.register(name, email, password)
@@ -58,7 +59,7 @@ function App() {
         setIsLoginPopupOpen(false);
       })
       .catch((e) => {
-        setIsRegisterPopupOpen(false);
+        setIsLoginPopupOpen(false);
         setInfoTitle('Ошибка входа');
         switch(e.status) {
           case 401: setInfoMessage('Некорректно указаны почта и/или пароль.');
@@ -88,7 +89,7 @@ function App() {
       })
   } 
 
-  const getUser = (id) => {
+  const confirmEmail = (id) => {
     return auth.checkToken(id)
       .then((res) => {
         localStorage.setItem('user_id', res.user._id );
@@ -110,7 +111,29 @@ function App() {
         }
         setIsInfoPopupOpen(true);
       });
-   }
+  }
+  
+  const refreshPass = ({ email }) => {
+    return auth.refreshPass(email)
+      .then((res) => {
+        setIsRefreshPassPopupOpen(false);
+        setInfoTitle('Восстановление пароля');
+        setInfoMessage('На указанную почту отправлена ссылка для восстановления пароля.');
+        setIsInfoPopupOpen(true);
+      })
+      .catch((e) => {
+        console.log(e)
+        setIsRefreshPassPopupOpen(false);
+        setInfoTitle('Восстановление пароля');
+        switch(e.status) {
+          case 404: setInfoMessage('Проверьте корректность указанного адреса почты.');
+            break;
+          default: setInfoMessage('Что-то пошло не так. Попробуйте повторить запрос.');
+            break;
+        }
+        setIsInfoPopupOpen(true);
+      });
+  }
 
   // const getAppData = () => {
   //   Promise.all([auth.getProfile(localStorage.getItem('user_id'))])
@@ -135,10 +158,16 @@ function App() {
     closeAllPopups();
     setIsRegisterPopupOpen(true);
   }
+
+  const handleRefreshClick = () => {
+    closeAllPopups();
+    setIsRefreshPassPopupOpen(true);
+  }  
    
   const closeAllPopups = () => {
     setIsLoginPopupOpen(false);
     setIsRegisterPopupOpen(false);
+    setIsRefreshPassPopupOpen(false);
     setIsInfoPopupOpen(false);
     setInfoTitle('');
     setInfoMessage('');
@@ -172,13 +201,14 @@ function App() {
           <Main handleLoginClick={handleLoginClick} handleRegisterClick={handleRegisterClick} />
         </Route> 
         <Route path="/accept">
-          <Accept getUser={ getUser } />
+          <Accept confirmEmail={ confirmEmail } />
         </Route>         
 
       </Switch>
 
       <RegisterPopup isOpen={isRegisterPopupOpen} onClose={closeAllPopups} onSubmit={registerUser} login={handleLoginClick} />
-      <LoginPopup isOpen={isLoginPopupOpen} onClose={closeAllPopups} onSubmit={loginUser} register={handleRegisterClick} />
+      <LoginPopup isOpen={isLoginPopupOpen} onClose={closeAllPopups} onSubmit={loginUser} refreshPass={handleRefreshClick} />
+      <RefreshPassPopup isOpen={isRefreshPassPopupOpen} onClose={closeAllPopups} onSubmit={refreshPass} login={handleLoginClick} />
       <InformPopup isOpen={isInfoPopupOpen} onClose={closeAllPopups} title={infoTitle} message={infoMessage} />
 
     </CurrentUserContext.Provider>

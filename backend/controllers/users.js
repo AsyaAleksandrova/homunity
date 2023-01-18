@@ -17,12 +17,12 @@ const MESSAGE_AUTH = 'Неправильные почта или пароль';
 module.exports.createUser = (req, res, next) => {
   const activationlink = uuid.v4();
   bcrypt.hash(req.body.password, 10)
-    .then((hash) => User.create({ ...req.body, password: hash, activationlink: `${process.env.BACK_ORIGIN}/activate/${activationlink}` }))
+    .then((hash) => User.create({ ...req.body, password: hash, activationlink: `${process.env.BACK_ORIGIN}/auth/activate/${activationlink}` }))
     .then((user) => MailService.sendActivationMail(user))
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_KEY : 'dev-secret', { expiresIn: '10d' });
       res
-        .cookie('refreshToken', token, { maxAge: 10 * 24 * 60 * 60 * 1000, httpOnly: true, SameSite: 'Lax', Secure: true })
+        .cookie('jwt', token, { maxAge: 10 * 24 * 60 * 60 * 1000, httpOnly: true, SameSite: 'Lax', Secure: true })
         .status(201)
         .send({ user: { name: user.name, email: user.email, _id: user._id } });
     })
@@ -38,7 +38,7 @@ module.exports.createUser = (req, res, next) => {
 };
 
 module.exports.confirmEmail = (req, res, next) => {
-  const activationlink = `${BACK_ORIGIN}/activate/${req.params.link}`;
+  const activationlink = `${BACK_ORIGIN}/auth/activate/${req.params.link}`;
   User
     .findOneAndUpdate({activationlink}, {confirmed: true}, { new: true, runValidators: true })
     .orFail()
@@ -64,17 +64,17 @@ module.exports.login = (req, res, next) => {
         if (!compare) {
           next(new AuthError(MESSAGE_AUTH));
         } else {
-          // if (user.confirmed) {
+          if (user.confirmed) {
             const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_KEY : 'dev-secret', { expiresIn: '30d' });
             res
               .status(200)
-              .cookie('refreshToken', token, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true, SameSite: 'Lax', Secure: true })
+              .cookie('jwt', token, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true, SameSite: 'Lax', Secure: true })
               .send({user: user});
-          // }
-          // else {
-          //   MailService.sendActivationMail(user);
-          //   next(new ForbiddenError('Для продолжения перейдите по направленной ссылке для подтвеждения email. Мы отправили ссылку повторно.'));
-          // }
+          }
+          else {
+            MailService.sendActivationMail(user);
+            next(new ForbiddenError('Для продолжения перейдите по направленной ссылке для подтвеждения email. Мы отправили ссылку повторно.'));
+          }
           }
       }))
     .catch((err) => {
@@ -90,8 +90,7 @@ module.exports.logout = (req, res, next) => {
   User
     .findById(req.user._id)
     .then((user) => {
-      console.log(user)
-      res.clearCookie('refreshToken', { httpOnly: true })
+      res.clearCookie('jwt', { httpOnly: true })
       res.status(200).json({message: "OK"})
     })
     .catch((err) => {
@@ -113,3 +112,26 @@ module.exports.getMyUser = (req, res, next) => {
       next(new OtherServerError(`Что-то пошло не так: ${err.message}`));
     });
 };
+
+module.exports.refreshlink = (req, res, next) => {
+  const { email } = req.body;
+  const newlink = uuid.v4();
+  User
+    .findOneAndUpdate({ email }, { refreshlink: `${process.env.BACK_ORIGIN}/auth/refresh/pass/${newlink}` }, { new: true, runValidators: true })
+    .orFail()
+    .then((user) => MailService.sendRefreshPassMail(user))
+    .then((user) => {
+      res.status(200).json({message: "OK"})
+    })
+    .catch((err) => {
+      if (err.name === 'DocumentNotFoundError') {
+        next(new NotFoundError('Пользователь не найден'));
+      } else {
+        next(new OtherServerError(`Что-то пошло не так: ${err.message}`));
+      }
+    });
+}
+
+module.exports.refreshpass = (req, res, next) => {
+
+}

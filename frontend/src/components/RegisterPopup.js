@@ -70,19 +70,19 @@ function RegisterPopup({ isOpen, onClose, onSubmit, login }) {
                <h2 className="popup__title">Регистрация</h2>
                <div className='popup__input-container'>
                   <span className = {`popup__input-placeholder ${isChangedName && 'popup__input-placeholder_active'}`}>Имя</span>
-                  <input onBlur={ setBlurName } onChange={handleChangeName} value={name} type="text" name="name" required minLength="2" maxLength="30" className="popup__input popup__input_user-name" placeholder="" />
+                  <input onBlur={ setBlurName } onChange={handleChangeName} value={name} type="text" name="name" required minLength="2" maxLength="30" className="popup__input" placeholder="" />
                   <label className={ `popup__input-label ${!nameError && 'popup__input-label_valid'}` }></label>
                   {(blurName && nameError) && <div className='popup__input-error'>{ nameError }</div>}
                </div>
                <div className='popup__input-container'>
                   <span className={`popup__input-placeholder ${isChangedEmail && 'popup__input-placeholder_active'}`}>Email</span>
-                  <input onBlur={ setBlurEmail } onChange={handleChangeEmail} value={email} type="email" name="email" autoComplete="username" required className="popup__input popup__input_user-email" placeholder="" />
+                  <input onBlur={ setBlurEmail } onChange={handleChangeEmail} value={email} type="email" name="email" autoComplete="username" required className="popup__input" placeholder="" />
                   <label className={ `popup__input-label ${!emailError && 'popup__input-label_valid'}` }></label>
                   {(blurEmail && emailError) && <p className='popup__input-error'>{ emailError }</p>}
                </div>
                <div className='popup__input-container'>
                   <span className={`popup__input-placeholder ${isChangedPass && 'popup__input-placeholder_active'}`}>Пароль</span>
-                  <input onBlur={ setBlurPass } onChange={handleChangePassword} value={password} type="password" name="password" autoComplete="new-password" required minLength="8" maxLength="30" className="popup__input popup__input_user-password" placeholder="" />
+                  <input onBlur={ setBlurPass } onChange={handleChangePassword} value={password} type="password" name="password" autoComplete="new-password" required minLength="8" maxLength="30" className="popup__input popup__input_last" placeholder="" />
                   <label className={`popup__input-label ${!passwordError && 'popup__input-label_valid'}`}></label>
                   {(blurPass && passwordError) && <div className='popup__input-error'>{ passwordError }</div>}
                </div>    

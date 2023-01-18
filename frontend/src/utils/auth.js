@@ -1,7 +1,7 @@
 export const BASE_URL = 'http://localhost:3001';
 
 export const register = (name, email, password) => {
-   return fetch(`${BASE_URL}/signup`, {
+   return fetch(`${BASE_URL}/auth/signup`, {
       method: 'POST',
       credentials: 'include',
       headers: { "Content-Type": "application/json" },
@@ -16,7 +16,7 @@ export const register = (name, email, password) => {
 };
 
 export const login = (email, password) => {
-   return fetch(`${BASE_URL}/login`, {
+   return fetch(`${BASE_URL}/auth/login`, {
       method: 'POST',
       credentials: 'include',
       headers: { "Content-Type": "application/json" },
@@ -31,7 +31,7 @@ export const login = (email, password) => {
 };
 
 export const logout = () => {
-   return fetch(`${BASE_URL}/logout`, {
+   return fetch(`${BASE_URL}/auth/logout`, {
       method: 'DELETE',
       credentials: 'include'
    })
@@ -44,9 +44,23 @@ export const logout = () => {
 };
 
 export const checkToken = (id) => {
-   return fetch(`${BASE_URL}/users/me/${id}`, {
+   return fetch(`${BASE_URL}/auth/profile/${id}`, {
       method: 'GET',
       credentials: 'include'
+   })
+      .then((response) => {
+         if (response.ok) {    
+            return response.json();
+         }
+            return Promise.reject(response);
+         })
+};
+
+export const refreshPass = (email) => {
+   return fetch(`${BASE_URL}/auth/refresh/link`, {
+      method: 'PATCH',
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({email})
    })
       .then((response) => {
          if (response.ok) {    

@@ -2,13 +2,13 @@
 import React from "react";
 import { useEffect } from 'react';
 
-function Accept({getUser}) {
+function Accept({confirmEmail}) {
 
    const link = document.location.href.toString().split('/');
    const id = link[link.length - 1];
 
    useEffect(() => {
-      getUser(id);
+      confirmEmail(id);
    }, [])      
 
    return (

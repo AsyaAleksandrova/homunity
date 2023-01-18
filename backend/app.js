@@ -5,10 +5,6 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors')
 const { errors } = require('celebrate');
-const { login, logout, createUser, confirmEmail, getMyUser } = require('./controllers/users');
-const auth = require('./middlewares/auth');
-const validateNewUser = require('./middlewares/validateNewUser');
-const validateAuth = require('./middlewares/validateAuth');
 const errorHandler = require('./middlewares/errorhandler');
 const NotFoundError = require('./errors/NotFoundError');
 const { PORT, FRONT_ORIGIN, MONGO_SERVER } = process.env;
@@ -30,11 +26,7 @@ mongoose.connect(MONGO_SERVER, {
   useNewUrlParser: true,
 });
 
-app.post('/signup', validateNewUser, createUser);
-app.get('/activate/:link', confirmEmail)
-app.post('/login', validateAuth, login);
-app.delete('/logout', auth, logout);
-app.use('/users/me/:id', auth, getMyUser);
+app.use('/auth', require('./routes/auth'));
 
 app.use((req, res, next) => {
   next(new NotFoundError('Не корректно задан адрес запроса'));
