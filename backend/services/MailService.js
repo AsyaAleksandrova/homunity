@@ -58,7 +58,7 @@ class MailService{
   }
 
 
-  sendRefreshPassMail(user) {
+  sendRefreshLinkMail(user) {
     const mailtext = `
     <body>
       <table style="color:#394650; max-width: 420px; width: 100%; font-family: Verdana, Geneva, sans-serif; margin: 0 auto;">
@@ -97,6 +97,41 @@ class MailService{
     return(user)
   }
 
+  sendRefreshPassMail(user) {
+    const mailtext = `
+    <body>
+      <table style="color:#394650; max-width: 420px; width: 100%; font-family: Verdana, Geneva, sans-serif; margin: 0 auto;">
+        <tbody>
+          <tr>
+            <td>
+              <h1 style="font-size:26px; margin: 20px 0;">Здравствуйте, ${user.name}!</h1>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p style="color:#394650; font-size:16px">Вы изменили пароль на сайте HomUnion. Если вы этого не делали, проверьте возможность зайти на сайт и восстановить пароль или свяжитесь с нами по форме обратной связи на сайте. </p>
+            </td>
+          </tr>
+          <tr>
+            <td>
+                <p style="font-size:12px">Вы получили это письмо, потому что зарегистрированы на сайте ${FRONT_ORIGIN}</p>
+                <p style="font-size:12px">Пожалуйста, не отвечайте на данное сообщение. Рассылка осуществляется автоматически.</p>
+            </td>
+          </tr>
+          <tr>
+        </tbody>
+      </table>
+    </body>
+  `
+// !!!!!! после тестирования заменить почту на user.email
+    this.transporter.sendMail({
+      from: APP_USER,
+      to: 'eccehomo.memories@gmail.com',
+      subject: 'Изменение пароля на сайте HomUnion',
+      html: mailtext
+    })
+    return(user)
+  }
 
 }
 

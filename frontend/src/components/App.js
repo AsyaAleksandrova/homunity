@@ -9,6 +9,8 @@ import Accept from './Accept'
 import RegisterPopup from "./RegisterPopup";
 import LoginPopup from "./LoginPopup";
 import RefreshPassPopup from './RefreshPassPopup';
+import ChangePass from './ChangePass';
+import NewPassPopup from './NewPassPopup';
 import InformPopup from "./InformPopup";
 import MyPage from './MyPage';
 
@@ -17,6 +19,7 @@ function App() {
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
   const [isRegisterPopupOpen, setIsRegisterPopupOpen] = useState(false);
   const [isRefreshPassPopupOpen, setIsRefreshPassPopupOpen] = useState(false);
+  const [isNewPassPopupOpen, setIsNewPassPopupOpen] = useState(false);
   const [isInfoPopupOpen, setIsInfoPopupOpen] = useState(false);
   const [infoTitle, setInfoTitle] = useState('');
   const [infoMessage, setInfoMessage] = useState('');
@@ -27,7 +30,7 @@ function App() {
   const registerUser = ({ name, email, password}) => {
     return auth.register(name, email, password)
       .then((res) => {
-        setIsRegisterPopupOpen(false);
+        closeAllPopups();
         setInfoTitle('Регистрация прошла успешно');
         setInfoMessage(`Мы отправили вам письмо на адрес ${res.user.email}. 
         Просьба перейти по ссылке для подтверждения адреса почты и активации аккаунта.
@@ -35,7 +38,7 @@ function App() {
         setIsInfoPopupOpen(true);
       })
       .catch((e) => {
-        setIsRegisterPopupOpen(false);
+        closeAllPopups();
         setInfoTitle('Ошибка регистрации');
         switch(e.status) {
           case 409: setInfoMessage('Пользователь с таким email уже зарегистрирован.');
@@ -56,10 +59,11 @@ function App() {
         setCurrentUser(res.user.name, res.user.email, res.user._id);
         setLoggedIn(true);
         history.push('/');
+        closeAllPopups();
         setIsLoginPopupOpen(false);
       })
       .catch((e) => {
-        setIsLoginPopupOpen(false);
+       closeAllPopups();
         setInfoTitle('Ошибка входа');
         switch(e.status) {
           case 401: setInfoMessage('Некорректно указаны почта и/или пароль.');
@@ -79,8 +83,6 @@ function App() {
         localStorage.removeItem('user_id');
         setCurrentUser({ name: '', email: '', _id: '' });
         setLoggedIn(false);
-        console.log('Я вышел')
-        console.log(localStorage)
       })
       .catch((e) => {
         setInfoTitle('Ошибка');
@@ -113,17 +115,17 @@ function App() {
       });
   }
   
-  const refreshPass = ({ email }) => {
-    return auth.refreshPass(email)
+  const refreshLink = ({ email }) => {
+    return auth.refreshLink(email)
       .then((res) => {
-        setIsRefreshPassPopupOpen(false);
+        closeAllPopups();
         setInfoTitle('Восстановление пароля');
         setInfoMessage('На указанную почту отправлена ссылка для восстановления пароля.');
         setIsInfoPopupOpen(true);
       })
       .catch((e) => {
         console.log(e)
-        setIsRefreshPassPopupOpen(false);
+        closeAllPopups();
         setInfoTitle('Восстановление пароля');
         switch(e.status) {
           case 404: setInfoMessage('Проверьте корректность указанного адреса почты.');
@@ -133,6 +135,61 @@ function App() {
         }
         setIsInfoPopupOpen(true);
       });
+  }
+
+  const changePassLink = (link) => {
+    return auth.getIdByLink(link)
+      .then((res) => {
+        localStorage.setItem('user_id', res.user._id);
+        localStorage.setItem('email', res.user.email );
+        setIsNewPassPopupOpen(true);
+      })
+      .catch((e) => {
+        console.log(e)
+        closeAllPopups();
+        setInfoTitle('Изменение пароля');
+        switch(e.status) {
+          case 404: setInfoMessage('Некорректная ссылка.');
+            break;         
+          default: setInfoMessage('Что-то пошло не так. Попробуйте повторить запрос.');
+            break;
+        }
+        setIsInfoPopupOpen(true);
+      });
+  }
+
+  const refreshPass = ({password}) => {
+    const email = localStorage.getItem('email');
+    const _id = localStorage.getItem('user_id')
+    return auth.refreshPass(email, password, _id)
+      .then((res) => {
+        localStorage.removeItem('email');
+        localStorage.setItem('user_id', res.user._id );
+        setCurrentUser(res.user.name, res.user.email, res.user._id);
+        setLoggedIn(true);
+        history.push('/');
+        closeAllPopups();
+        setInfoTitle('Изменение пароля');
+        setInfoMessage('Пароль успешно изменен.');
+        setIsInfoPopupOpen(true);
+      })
+      .catch((e) => {
+        console.log(e)
+        closeAllPopups();
+        localStorage.removeItem('email');
+        localStorage.removeItem('user_id');
+        setInfoTitle('Изменение пароля');
+        switch(e.status) {
+          case 404: setInfoMessage('Некорректная ссылка.');
+            break;
+          case 400: setInfoMessage('Указаны некорректные параметры при изменении данных пользователя.');
+            break;          
+          default: setInfoMessage('Что-то пошло не так. Попробуйте повторить запрос.');
+            break;
+        }
+        history.push('/main');
+        setIsInfoPopupOpen(true);
+      });      
   }
 
   // const getAppData = () => {
@@ -168,6 +225,7 @@ function App() {
     setIsLoginPopupOpen(false);
     setIsRegisterPopupOpen(false);
     setIsRefreshPassPopupOpen(false);
+    setIsNewPassPopupOpen(false);
     setIsInfoPopupOpen(false);
     setInfoTitle('');
     setInfoMessage('');
@@ -202,13 +260,17 @@ function App() {
         </Route> 
         <Route path="/accept">
           <Accept confirmEmail={ confirmEmail } />
+        </Route>
+        <Route path="/auth/refresh/pass/">
+          <ChangePass changePass={ changePassLink } />
         </Route>         
 
       </Switch>
 
       <RegisterPopup isOpen={isRegisterPopupOpen} onClose={closeAllPopups} onSubmit={registerUser} login={handleLoginClick} />
       <LoginPopup isOpen={isLoginPopupOpen} onClose={closeAllPopups} onSubmit={loginUser} refreshPass={handleRefreshClick} />
-      <RefreshPassPopup isOpen={isRefreshPassPopupOpen} onClose={closeAllPopups} onSubmit={refreshPass} login={handleLoginClick} />
+      <RefreshPassPopup isOpen={isRefreshPassPopupOpen} onClose={closeAllPopups} onSubmit={refreshLink} login={handleLoginClick} />
+      <NewPassPopup isOpen={isNewPassPopupOpen} onClose={closeAllPopups} onSubmit={refreshPass} />
       <InformPopup isOpen={isInfoPopupOpen} onClose={closeAllPopups} title={infoTitle} message={infoMessage} />
 
     </CurrentUserContext.Provider>

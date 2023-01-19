@@ -40,7 +40,7 @@ module.exports.createUser = (req, res, next) => {
 module.exports.confirmEmail = (req, res, next) => {
   const activationlink = `${BACK_ORIGIN}/auth/activate/${req.params.link}`;
   User
-    .findOneAndUpdate({activationlink}, {confirmed: true}, { new: true, runValidators: true })
+    .findOneAndUpdate({activationlink}, {confirmed: true, activationlink: ''}, { new: true, runValidators: true })
     .orFail()
     .then((user) => {
       res.status(200).redirect(`${FRONT_ORIGIN}/accept/${user._id}`)
@@ -117,9 +117,9 @@ module.exports.refreshlink = (req, res, next) => {
   const { email } = req.body;
   const newlink = uuid.v4();
   User
-    .findOneAndUpdate({ email }, { refreshlink: `${process.env.BACK_ORIGIN}/auth/refresh/pass/${newlink}` }, { new: true, runValidators: true })
+    .findOneAndUpdate({ email }, { refreshlink: `${process.env.FRONT_ORIGIN}/auth/refresh/pass/${newlink}` }, { new: true, runValidators: true })
     .orFail()
-    .then((user) => MailService.sendRefreshPassMail(user))
+    .then((user) => MailService.sendRefreshLinkMail(user))
     .then((user) => {
       res.status(200).json({message: "OK"})
     })
@@ -132,6 +132,51 @@ module.exports.refreshlink = (req, res, next) => {
     });
 }
 
-module.exports.refreshpass = (req, res, next) => {
+module.exports.getidbylink = (req, res, next) => {
+  const link = `${process.env.FRONT_ORIGIN}/auth/refresh/pass/${req.params.link}`
+  User
+    .findOne({ refreshlink: link })
+    .orFail()
+    .then((user) => {
+      res
+        .status(200)
+        .send({ user: { name: user.name, email: user.email, _id: user._id, refreshlink: user.refreshlink } })
+    })
+    .catch((err) => {
+      if (err.name === 'DocumentNotFoundError') {
+        next(new NotFoundError('Пользователь не найден'));
+      } else {
+        next(new OtherServerError(`Что-то пошло не так: ${err.message}`));
+      }
+    });
+}
 
+
+module.exports.refreshpass = (req, res, next) => {
+  const { email, password } = req.body;
+  const _id = req.params._id;
+  bcrypt.hash(password, 10)
+    .then((hash) => {
+      User
+      .findOneAndUpdate({ _id, email }, {password: hash, refreshlink: ''}, { new: true, runValidators: true })
+      .orFail()
+      .then((user) => MailService.sendRefreshPassMail(user))
+      .then((user) => {
+        const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_KEY : 'dev-secret', { expiresIn: '30d' });
+        res
+          .status(200)
+          .cookie('jwt', token, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true, SameSite: 'Lax', Secure: true })
+          .send({ user: { name: user.name, email: user.email, _id: user._id } })
+        return user
+      })
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new ValidationError(`Переданы некорректные данные при обновлении данных пользователя: ${err.message}`));
+      } else if (err.name === 'DocumentNotFoundError') {
+        next(new NotFoundError('Пользователь не найден'));
+      } else {
+        next(new OtherServerError(`Что-то пошло не так: ${err.message}`));
+      }
+    });
 }

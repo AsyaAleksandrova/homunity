@@ -56,11 +56,38 @@ export const checkToken = (id) => {
          })
 };
 
-export const refreshPass = (email) => {
+export const refreshLink = (email) => {
    return fetch(`${BASE_URL}/auth/refresh/link`, {
       method: 'PATCH',
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({email})
+   })
+      .then((response) => {
+         if (response.ok) {    
+            return response.json();
+         }
+            return Promise.reject(response);
+         })
+};
+
+export const getIdByLink = (link) => {
+   return fetch(`${BASE_URL}/auth/refresh/pass/${link}`, {
+      method: 'GET',
+      headers: { "Content-Type": "application/json" }
+   })
+      .then((response) => {
+         if (response.ok) {    
+            return response.json();
+         }
+            return Promise.reject(response);
+         })
+};
+
+export const refreshPass = (email, password, _id) => {
+   return fetch(`${BASE_URL}/auth/refresh/pass/${_id}`, {
+      method: 'PATCH',
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({email, password})
    })
       .then((response) => {
          if (response.ok) {    
