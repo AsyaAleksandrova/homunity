@@ -51,7 +51,7 @@ function LoginPopup({ isOpen, onClose, onSubmit, refreshPass }) {
    }
 
    return (
-      <section className={`popup popup_type_register ${isOpen && 'popup_open'}`}>
+      <section className={`popup ${isOpen && 'popup_open'}`}>
          <div className="popup__content">
             <form onSubmit={handleSubmit} name='register' className="popup__form">
                <button onClick={onClose} type="button" className="popup__close"></button>

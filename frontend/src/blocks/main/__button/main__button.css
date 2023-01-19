@@ -7,6 +7,7 @@
    font-family: 'Exo2';
    font-size: 20px;
    font-weight: 300;
+   margin-bottom: 20px;
    transition: all ease 0.5s;
    cursor: pointer;
 }
@@ -19,4 +20,12 @@
 .main__button:active{
    transform: scale(1);
    box-shadow: 3px 0 5px gray;
+}
+
+@media screen and (max-width: 1440px) {
+   .main__button {
+      font-size: 16px;
+      width: 130px;
+      height: 35px;
+   }
 }

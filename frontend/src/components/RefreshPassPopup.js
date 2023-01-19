@@ -42,7 +42,7 @@ function RefreshPassPopup({ isOpen, onClose, onSubmit, login }) {
    }
 
    return (
-      <section className={`popup popup_type_refresh ${isOpen && 'popup_open'}`}>
+      <section className={`popup ${isOpen && 'popup_open'}`}>
          <div className="popup__content">
             <form onSubmit={handleSubmit} name='refresh' className="popup__form">
                <button onClick={onClose} type="button" className="popup__close"></button>

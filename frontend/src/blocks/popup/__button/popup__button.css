@@ -33,3 +33,10 @@
    transform: none;
    box-shadow: none;
 }
+
+@media screen and (max-width: 1440px) {
+   .popup__button {
+      font-size: 16px;
+      height: 35px;
+   }
+}

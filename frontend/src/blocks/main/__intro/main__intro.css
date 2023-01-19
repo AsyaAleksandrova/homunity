@@ -1,8 +1,26 @@
 .main__intro{
    font-family: 'Exo2';
-   font-size: 26px;
+   font-size: 24px;
    font-weight: 200;
    margin: 20px 0;
    user-select: none;
    color: var(--colorMain);
+}
+
+@media screen and (max-width: 1600px) {
+   .main__intro {
+      font-size: 20px;
+   }
+}
+
+@media screen and (max-width: 1440px) {
+   .main__intro {
+      font-size: 18px;
+   }
+}
+
+@media screen and (max-width: 720px) {
+   .main__intro {
+      font-size: 14px;
+   }
 }

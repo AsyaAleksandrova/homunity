@@ -1,7 +1,31 @@
 .main__synthesis{
    font-family: 'Anton';
-   font-size: 104px;
+   font-size: 100px;
    color: var(--colorBrand);
-   margin: 0;
+   margin: 10px 0 0;
    user-select: none;
+}
+
+@media screen and (max-width: 1600px) {
+   .main__synthesis {
+      font-size: 80px;
+   }
+}
+
+@media screen and (max-width: 1440px) {
+   .main__synthesis {
+      font-size: 70px;
+   }
+}
+
+@media screen and (max-width: 1024px) {
+   .main__synthesis {
+      font-size: 60px;
+   }
+}
+
+@media screen and (max-width: 480px) {
+   .main__synthesis {
+      font-size: 50px;
+   }
 }

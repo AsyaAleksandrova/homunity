@@ -4,8 +4,15 @@
    background-image: url(../../images/pexels-ann-zzz-8226842\ —\ копия.jpg);
    background-repeat: no-repeat;
    background-size: cover;
+   background-position: center;
    display: flex;
    flex-direction: row;
    justify-content:flex-end;
    align-items: center;
+}
+
+@media screen and (max-width: 1024px){
+   .main{
+      justify-content: center;
+   }
 }

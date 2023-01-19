@@ -1,4 +1,30 @@
 .main__container{
-   margin: 0 60px;
-   width: 40%;
+   margin: 40px 60px;
+   max-width: 700px;
+}
+
+@media screen and (max-width: 1600px) {
+   .main__container {
+      max-width: 590px;
+      margin: 40px;
+   }
+}
+
+@media screen and (max-width: 1440px) {
+   .main__container {
+      max-width: 480px;;
+   }
+}
+
+@media screen and (max-width: 720px) {
+   .main__container {
+      max-width: 380px;
+   }
+}
+
+@media screen and (max-width: 480px) {
+   .main__container {
+      max-width: 300px;
+      margin: 15px;
+   }
 }
