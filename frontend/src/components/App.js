@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
@@ -24,7 +25,7 @@ function App() {
   const [infoTitle, setInfoTitle] = useState('');
   const [infoMessage, setInfoMessage] = useState('');
   const isOpen = isLoginPopupOpen || isRegisterPopupOpen || isInfoPopupOpen;
-  const [currentUser, setCurrentUser] = useState({});
+  const [currentUser, setCurrentUser] = useState({name: '', email: '', _id: ''});
   const [loggedIn, setLoggedIn] = useState(false);
 
   const registerUser = ({ name, email, password}) => {
@@ -56,7 +57,7 @@ function App() {
     return auth.login(email, password)
       .then((res) => {
         localStorage.setItem('user_id', res.user._id );
-        setCurrentUser(res.user.name, res.user.email, res.user._id);
+        setCurrentUser({ ...currentUser, name: res.user.name, email: res.user.email, _id: res.user._id });
         setLoggedIn(true);
         history.push('/');
         closeAllPopups();
@@ -94,13 +95,13 @@ function App() {
   const confirmEmail = (id) => {
     return auth.checkToken(id)
       .then((res) => {
-        localStorage.setItem('user_id', res.user._id );
-        setCurrentUser(res.user.name, res.user.email, res.user._id);
-        setLoggedIn(true);
-        history.push('/');         
+        localStorage.setItem('user_id', res.user._id );    
         setInfoTitle('Регистрация завершена');
         setInfoMessage('Ваш Email подтвержден. Спасибо за регистрацию на сайте!');
         setIsInfoPopupOpen(true);
+      })
+      .then(() => {
+        getAppData();
       })
       .catch((e) => {
         history.push('/main');
@@ -165,7 +166,7 @@ function App() {
       .then((res) => {
         localStorage.removeItem('email');
         localStorage.setItem('user_id', res.user._id );
-        setCurrentUser(res.user.name, res.user.email, res.user._id);
+        setCurrentUser({name: res.user.name, email: res.user.email, _id: res.user._id});
         setLoggedIn(true);
         history.push('/');
         closeAllPopups();
@@ -192,19 +193,27 @@ function App() {
       });      
   }
 
-  // const getAppData = () => {
-  //   Promise.all([auth.getProfile(localStorage.getItem('user_id'))])
-  //     .then(([user]) => {
-  //       setCurrentUser(user);
-  //       setLoggedIn(true);
-  //     })
-  //     .catch((e) => {
-  //       setIsRegisterPopupOpen(false);
-  //       setInfoTitle('Ошибка получения данных о пользователе');
-  //       setInfoMessage('Что-то пошло не так. Попробуйте повторить запрос.');
-  //       setIsInfoPopupOpen(true);
-  //     }); 
-  // }
+  const getAppData = () => {
+    return auth.checkToken(localStorage.getItem('user_id'))
+      .then((res) => {
+        setCurrentUser({ ...currentUser, name: res.user.name, email: res.user.email, _id: res.user._id });
+        setLoggedIn(true);
+        history.push('/')
+      })
+      .catch((e) => {
+        localStorage.removeItem('user_id');
+        setIsRegisterPopupOpen(false);
+        setInfoTitle('Ошибка получения данных о пользователе. Необходима авторизация.');
+        setInfoMessage('Что-то пошло не так. Попробуйте повторить запрос.');
+        setIsInfoPopupOpen(true);
+      }); 
+  }
+
+  useEffect(() => {
+    if (localStorage.getItem('user_id')) {
+      getAppData();
+    }
+  }, [])  
   
   const handleLoginClick = () => {
     closeAllPopups();
@@ -252,6 +261,7 @@ function App() {
           exact path="/"
           loggedIn={loggedIn}
           logOut={logOut}
+          currentUser={currentUser}
           component={MyPage}
         /> 
 

@@ -28,6 +28,7 @@
 @import url(./blocks/header/__search/header__search.css);
 @import url(./blocks/header/__button/header__button.css);
 @import url(./blocks/header/__submit/header__submit.css);
+@import url(./blocks/header/__username/header__username.css);
 @import url(./blocks/mypage/__family/mypage__family.css);
 @import url(./blocks/mypage/__family-list/mypage__family-list.css);
 @import url(./blocks/mypage/__family-item/mypage__family-item.css);

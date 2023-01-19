@@ -69,7 +69,7 @@ module.exports.login = (req, res, next) => {
             res
               .status(200)
               .cookie('jwt', token, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true, SameSite: 'Lax', Secure: true })
-              .send({user: user});
+              .send({ user: { name: user.name, email: user.email, _id: user._id } });
           }
           else {
             MailService.sendActivationMail(user);
@@ -103,7 +103,7 @@ module.exports.getMyUser = (req, res, next) => {
     .findById(req.user._id)
     .then((user) => {
       if (user._id.toString() === req.params.id) {
-        res.status(200).send({user: user });
+        res.status(200).send({user: {name: user.name, email: user.email, _id: user._id}});
       } else {
         next(new AuthError('Необходима авторизация'));
       }
@@ -167,7 +167,6 @@ module.exports.refreshpass = (req, res, next) => {
           .status(200)
           .cookie('jwt', token, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true, SameSite: 'Lax', Secure: true })
           .send({ user: { name: user.name, email: user.email, _id: user._id } })
-        return user
       })
     })
     .catch((err) => {

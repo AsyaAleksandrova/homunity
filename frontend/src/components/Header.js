@@ -1,16 +1,15 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import { useForm } from '../hooks/useForm';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { faBell } from '@fortawesome/free-regular-svg-icons';
 import { faDoorOpen } from '@fortawesome/free-solid-svg-icons';
-import { faUserGroup } from '@fortawesome/free-solid-svg-icons';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
 function Header({ loggedIn, logOut, currentUser }) {
    const className = `header ${!loggedIn && 'header_hidden'}`;
-   const [search, setSearch, handleChangeSearch] = useForm('');
+   const [search, isChangedSearch, handleChangeSearch, refreshSearch] = useForm('');
 
    return (
       <header className={className}>
@@ -23,10 +22,9 @@ function Header({ loggedIn, logOut, currentUser }) {
             <button type='button' className='header__button'><FontAwesomeIcon icon={faBell} style={{ color: '#394650' }} transform="grow-5" /></button>
          </div>
          <div className='header__menu'>
-            <button type='button' className='header__button'><FontAwesomeIcon icon={faEnvelope} style={{ color: '#394650' }} transform="grow-15" /></button>
-            <button type='button' className='header__button'><FontAwesomeIcon icon={faUserGroup} style={{ color: '#394650' }} transform="grow-10" /></button>
+            <p className='header__username'>{ currentUser.name }</p>
             <button type='button' className='header__button'><FontAwesomeIcon icon={faCircleUser} style={{ color: '#394650' }} transform="grow-15" /></button>
-            <button onClick={logOut} type='button' className='header__button'><FontAwesomeIcon icon={faDoorOpen} style={{ color: '#394650' }} transform="grow-14" /></button>
+            <button onClick={logOut} type='button' className='header__button'><FontAwesomeIcon icon={faDoorOpen} style={{ color: '#394650' }} transform="grow-10" /></button>
             
          </div>
          

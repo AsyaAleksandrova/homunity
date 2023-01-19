@@ -86,6 +86,7 @@ export const getIdByLink = (link) => {
 export const refreshPass = (email, password, _id) => {
    return fetch(`${BASE_URL}/auth/refresh/pass/${_id}`, {
       method: 'PATCH',
+      credentials: 'include',
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({email, password})
    })

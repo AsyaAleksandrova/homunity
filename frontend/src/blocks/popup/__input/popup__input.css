@@ -15,6 +15,10 @@
    margin-bottom: 30px;
 }
 
+.popup__input_hidden{
+   visibility: hidden;
+}
+
 .popup__input:focus{
    outline: 0;
    outline-offset: 0;
