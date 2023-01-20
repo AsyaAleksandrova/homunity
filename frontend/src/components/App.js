@@ -202,6 +202,7 @@ function App() {
       })
       .catch((e) => {
         localStorage.removeItem('user_id');
+        history.push('/main')
         setIsRegisterPopupOpen(false);
         setInfoTitle('Ошибка получения данных о пользователе. Необходима авторизация.');
         setInfoMessage('Что-то пошло не так. Попробуйте повторить запрос.');
@@ -280,7 +281,7 @@ function App() {
       <RegisterPopup isOpen={isRegisterPopupOpen} onClose={closeAllPopups} onSubmit={registerUser} login={handleLoginClick} />
       <LoginPopup isOpen={isLoginPopupOpen} onClose={closeAllPopups} onSubmit={loginUser} refreshPass={handleRefreshClick} />
       <RefreshPassPopup isOpen={isRefreshPassPopupOpen} onClose={closeAllPopups} onSubmit={refreshLink} login={handleLoginClick} />
-      <NewPassPopup isOpen={isNewPassPopupOpen} onClose={closeAllPopups} onSubmit={refreshPass} />
+      <NewPassPopup isOpen={isNewPassPopupOpen} onClose={getAppData} onSubmit={refreshPass} />
       <InformPopup isOpen={isInfoPopupOpen} onClose={closeAllPopups} title={infoTitle} message={infoMessage} />
 
     </CurrentUserContext.Provider>

@@ -40,3 +40,7 @@
       height: 35px;
    }
 }
+
+.popup__button_small{
+   width: 150px;
+}
