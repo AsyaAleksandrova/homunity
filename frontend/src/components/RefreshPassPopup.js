@@ -5,19 +5,24 @@ import { ValidateEmail } from '../hooks/ValidateEmail';
 
 function RefreshPassPopup({ isOpen, onClose, onSubmit, login }) { 
    const [btnName, setBtnName] = useState('Отправить');
-   const [email, isChangedEmail, handleChangeEmail, refreshEmail] = useForm('');
+   const [email, setEmail, handleChangeEmail] = useForm('');
+   const [isChangedEmail, setIsChangedEmail] = useState(false);
    const [blurEmail, setBlurEmail] = useState(false);
    const [emailError, checkEmailError] = ValidateEmail();
    const [disableButton, setDisableButton] = useState(true);
 
    useEffect(() => {
-      refreshEmail('');
+      setEmail('');
+      setIsChangedEmail(false);
       setBlurEmail(false);
       setDisableButton(true);      
    }, [isOpen]);
 
    useEffect(() => {
-      checkEmailError(email);  
+      checkEmailError(email);
+      if (email === '') {
+         setIsChangedEmail(false)
+      } else{ setIsChangedEmail(true)}
    }, [email]);  
 
    useEffect(() => {

@@ -1,4 +1,5 @@
 .popup__content_fullscreen{
-   width: calc(100vw - 40px);
+   min-width: min-content;
+   min-height: min-content;
    background-color: #fff;
 }

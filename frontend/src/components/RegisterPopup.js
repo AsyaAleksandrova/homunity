@@ -8,9 +8,12 @@ import { ValidateShortInput } from '../hooks/ValidateShortInput';
 
 function RegisterPopup({ isOpen, onClose, onSubmit, login }) { 
    const [btnName, setBtnName] = useState('Сохранить');
-   const [name, isChangedName, handleChangeName, refreshName ] = useForm('');
-   const [email, isChangedEmail, handleChangeEmail, refreshEmail] = useForm('');
-   const [password, isChangedPass, handleChangePassword, refreshPassword] = useForm('');
+   const [name, setName, handleChangeName ] = useForm('');
+   const [email, setEmail, handleChangeEmail] = useForm('');
+   const [password, setPassword, handleChangePassword] = useForm('');
+   const [isChangedName, setIsChangedName] = useState(false);
+   const [isChangedEmail, setIsChangedEmail] = useState(false);
+   const [isChangedPass, setIsChangedPass] = useState(false);   
    const [blurName, setBlurName] = useState(false);
    const [blurEmail, setBlurEmail] = useState(false);
    const [blurPass, setBlurPass] = useState(false);     
@@ -20,9 +23,12 @@ function RegisterPopup({ isOpen, onClose, onSubmit, login }) {
    const [disableButton, setDisableButton] = useState(true);
 
    useEffect(() => {
-      refreshName('');
-      refreshEmail('');
-      refreshPassword('');
+      setName('');
+      setEmail('');
+      setPassword('');
+      setIsChangedName(false);
+      setIsChangedEmail(false);
+      setIsChangedName(false);
       setBlurName(false);
       setBlurEmail(false);
       setBlurPass(false);
@@ -31,14 +37,23 @@ function RegisterPopup({ isOpen, onClose, onSubmit, login }) {
 
    useEffect(() => {
       checkNameError(name);
+      if (name === '') {
+         setIsChangedName(false)
+      } else{ setIsChangedName(true)}
    }, [name]);
 
    useEffect(() => {
-      checkEmailError(email);  
+      checkEmailError(email);
+      if (email === '') {
+         setIsChangedEmail(false)
+      } else{ setIsChangedEmail(true)}
    }, [email]);
    
    useEffect(() => {
       checkPasswordError(password);
+      if (password === '') {
+         setIsChangedPass(false)
+      } else{ setIsChangedPass(true)}
    }, [password]);     
 
    useEffect(() => {

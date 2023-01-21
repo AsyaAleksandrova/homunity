@@ -5,20 +5,25 @@ import { ValidatePassword } from '../hooks/ValidatePassword';
 
 function NewPassPopup({ isOpen, onClose, onSubmit }) {
    const [btnName, setBtnName] = useState('Сохранить');
-   const [password, isChangedPass, handleChangePassword, refreshPassword] = useForm('');
+   const [password, setPassword, handleChangePassword] = useForm('');
+   const [isChangedPass, setIsChangedPass] = useState(false); 
    const [blurPass, setBlurPass] = useState(false);   
    const [passwordError, checkPasswordError] = ValidatePassword();
    const [disableButton, setDisableButton] = useState(true);
    const email = localStorage.getItem('email');
 
    useEffect(() => {
-      refreshPassword('');
+      setPassword('');
+      setIsChangedPass(false)
       setBlurPass(false);
       setDisableButton(true);
    }, [isOpen]);
    
    useEffect(() => {
       checkPasswordError(password);
+      if (password === '') {
+         setIsChangedPass(false)
+      } else{ setIsChangedPass(true)}
    }, [password]); 
 
    useEffect(() => {

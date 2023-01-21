@@ -7,8 +7,10 @@ import { ValidateEmail } from '../hooks/ValidateEmail';
 
 function LoginPopup({ isOpen, onClose, onSubmit, refreshPass }) {
    const [btnName, setBtnName] = useState('Войти');
-   const [email, isChangedEmail, handleChangeEmail, refreshEmail] = useForm('');
-   const [password, isChangedPass, handleChangePassword, refreshPassword] = useForm('');
+   const [email, setEmail, handleChangeEmail] = useForm('');
+   const [password, setPassword, handleChangePassword] = useForm('');
+   const [isChangedEmail, setIsChangedEmail] = useState(false);
+   const [isChangedPass, setIsChangedPass] = useState(false);
    const [blurEmail, setBlurEmail] = useState(false);
    const [blurPass, setBlurPass] = useState(false);   
    const [emailError, checkEmailError] = ValidateEmail();
@@ -16,8 +18,10 @@ function LoginPopup({ isOpen, onClose, onSubmit, refreshPass }) {
    const [disableButton, setDisableButton] = useState(true);
 
    useEffect(() => {
-      refreshEmail('');
-      refreshPassword('');
+      setEmail('');
+      setPassword('');
+      setIsChangedEmail(false);
+      setIsChangedPass(false);
       setBlurEmail(false);
       setBlurPass(false);
       setDisableButton(true);
@@ -25,10 +29,16 @@ function LoginPopup({ isOpen, onClose, onSubmit, refreshPass }) {
 
    useEffect(() => {
       checkEmailError(email);
+      if (email === '') {
+         setIsChangedEmail(false)
+      } else{ setIsChangedEmail(true)}
    }, [email]);
    
    useEffect(() => {
       checkPasswordError(password);
+      if (password === '') {
+         setIsChangedPass(false)
+      } else{ setIsChangedPass(true)}
    }, [password]); 
 
    useEffect(() => {

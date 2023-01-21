@@ -38,7 +38,9 @@
 }
 
 .popup__person-input_long{
-   width: 570px;
+   width: 80%;
+   max-width: 550px;
+   min-height: 40px;
 }
 
 @media screen and (max-width: 780px) {
@@ -91,6 +93,7 @@
    display: inline-block;
    width: 90px;
    min-width: 90px;
+   align-self: flex-start;
 }
 
 .popup__person-input_error{
@@ -111,5 +114,5 @@
    background-repeat: no-repeat;
    border: none;
    background-color: transparent;
-   margin: 0 5px 15px;
+   margin: 0 5px 15px;align-self: flex-start;
 }

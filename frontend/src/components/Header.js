@@ -9,7 +9,7 @@ import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
 function Header({ loggedIn, logOut, currentUser }) {
    const className = `header ${!loggedIn && 'header_hidden'}`;
-   const [search, isChangedSearch, handleChangeSearch, refreshSearch] = useForm('');
+   const [search, setSearch, handleChangeSearch] = useForm('');
 
    return (
       <header className={className}>

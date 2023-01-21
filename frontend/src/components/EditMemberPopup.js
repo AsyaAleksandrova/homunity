@@ -1,88 +1,79 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { useForm } from '../hooks/useForm';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPerson } from '@fortawesome/free-solid-svg-icons';
-import { faPersonDress } from '@fortawesome/free-solid-svg-icons';
-import { faPersonCircleQuestion } from '@fortawesome/free-solid-svg-icons';
+import {Resizable} from 're-resizable'
 import { ValidateShortInput } from '../hooks/ValidateShortInput';
 import { ValidateDate } from '../hooks/ValidateDate';
+import ShortTextInput from './ShortTextInput';
+import GenderInput from './GenderInput';
+import DateInput from './DateInput'
 import OptionalTextInput from './OptionalTextInput';
 
 function EditMemberPopup({ isOpen, onClose, member, onSubmit, newOne }) {
-   const [btnName, setBtnName] = useState('Сохранить');
    const title = `${newOne ? 'Новая карточка члена семьи' : 'Редактирование карточки'} `
+   const [btnName, setBtnName] = useState('Сохранить');
    const [disableButton, setDisableButton] = useState(true);
    const [hideOptions, setHideOptions] = useState(true)
    const classInsideContainer = `popup__choice-inside-container ${hideOptions && 'popup__choice-inside-container_hidden'}`;
    const classHideButton = `popup__choice-hidebutton ${hideOptions && 'popup__choice-hidebutton_hidden'}`;
    
-   const [name, isChangedName, handleChangeName, refreshName] = useForm('');
-   const [blurName, setBlurName] = useState(false);
+   const [name, setName, handleChangeName] = useForm('');
    const [nameError, checkNameError] = ValidateShortInput();
 
-   const [surname, isChangedSurname, handleChangeSurname, refreshSurname] = useForm('');
-   const [blurSurname, setBlurSurame] = useState(false);
+   const [gender, setGender] = useState('');
+   const [genderError, setGenderError] = useState('');
+
+   const [dateBirth, setDateBirth, handleChangeDateBirth] = useForm('');
+   const [dateBirthError, checkDateBirthError] = ValidateDate();  
+
+   // const [country, setCountry, handleChangeCountry] = useForm('');
+   // const [countryError, checkCountryError] = ValidateShortInput(); 
+   // const [addCountry, setAddCountry] = useState(false);
+
+   // const [region, setRegion, handleChangeRegion] = useForm('');
+   // const [regionError, checkRegionyError] = ValidateShortInput(); 
+   // const [addRegion, setAddRegion] = useState(false);
+
+   // опциональные поля:
+   const [surname, setSurname, handleChangeSurname] = useForm('');
    const [surnameError, checkSurnameError] = ValidateShortInput(); 
    const [addSurname, setAddSurname] = useState(false);
 
-   const [patronymic, isChangedPatronymic, handleChangePatronymic, refreshPatronymic] = useForm('');
-   const [blurPatronymic, setBlurPatronymic] = useState(false);
+   const [patronymic, setPatronymic, handleChangePatronymic] = useForm('');
    const [patronymicError, checkPatronymicError] = ValidateShortInput(); 
-   const [addPatronymic, setAddPatronymic] = useState(false);
+   const [addPatronymic, setAddPatronymic] = useState(false);   
 
-   const [gender, setGender] = useState('');
-   const [male, setMale] = useState(false);
-   const [female, setFemale] = useState(false);
-   const [nogender, setNogender] = useState(false);
-   const [genderError, setGenderError] = useState('');
-
-   const [dateBirth, isChangedDateBirth, handleChangeDateBirth, refreshDateBirth] = useForm('');
-   const [dateBirthNotSet, setDateBirthNotSet] = useState(false);
-   const [blurDateBirth, setBlurDateBirth] = useState(false);
-   const [dateBirthError, checkDateBirthError] = ValidateDate();
-   const classCheckBirth = `popup__person-input popup__person-input_checkbox ${dateBirthNotSet && 'popup__person-input_checkbox_checked'}`   
-
-   const [country, isChangedCountry, handleChangeCountry, refreshCountry] = useForm('');
-   const [countryError, checkCountryError] = ValidateShortInput(); 
-   const [addCountry, setAddCountry] = useState(false);
-
-   const [region, isChangedRegion, handleChangeRegion, refreshRegion] = useForm('');
-   const [regionError, checkRegionyError] = ValidateShortInput(); 
-   const [addRegion, setAddRegion] = useState(false);
-
-   // опциональные поля:
-
-   const [biography, isChangedBiography, handleChangeBiography, refreshBiography] = useForm('');
+   const [biography, setBiography, handleChangeBiography] = useForm('');
    const [addBiography, setAddBiography] = useState(false);
-   const [hobby, isChangedHobby, handleChangeHobby, refreshHobby] = useForm('');
+   const [hobby, setHobby, handleChangeHobby] = useForm('');
    const [addHobby, setAddHobby] = useState(false);
-   const [achievements, isChangedAchievements, handleChangeAchievements, refreshAchievements] = useForm('');
+   const [achievements, setAchievements, handleChangeAchievements] = useForm('');
    const [addAchievements, setAddAchievements] = useState(false);
-   const [rewards, isChangedRewards, handleChangeRewards, refreshRewards] = useForm('');
+   const [rewards, setRewards, handleChangeRewards] = useForm('');
    const [addRewards, setAddRewards] = useState(false);
-   const [trips, isChangedTrips, handleChangeTrips, refreshTrips] = useForm('');
+   const [trips, setTrips, handleChangeTrips] = useForm('');
    const [addTrips, setAddTrips] = useState(false);
-   const [books, isChangedBooks, handleChangeBooks, refreshBooks] = useForm('');
+   const [books, setBooks, handleChangeBooks] = useForm('');
    const [addBooks, setAddBooks] = useState(false);
-   const [sport, isChangedSport, handleChangeSport, refreshSport] = useForm('');
+   const [sport, setSport, handleChangeSport] = useForm('');
    const [addSport, setAddSport] = useState(false);
-   const [music, isChangedMusic, handleChangeMusic, refreshMusic] = useForm('');
+   const [music, setMusic, handleChangeMusic] = useForm('');
    const [addMusic, setAddMusic] = useState(false);
-   const [cinema, isChangedCinema, handleChangeCinema, refreshCinema] = useForm('');
+   const [cinema, setCinema, handleChangeCinema] = useForm('');
    const [addCinema, setAddCinema] = useState(false);
-   const [games, isChangedGames, handleChangeGames, refreshGames] = useForm('');
+   const [games, setGames, handleChangeGames] = useForm('');
    const [addGames, setAddGames] = useState(false);
-   const [schoolmates, isChangedSchoolmates, handleChangeSchoolmates, refreshSchoolmates] = useForm('');
+   const [schoolmates, setSchoolmates, handleChangeSchoolmates] = useForm('');
    const [addSchoolmates, setAddSchoolmates] = useState(false);
-   const [firstlove, isChangedFirstlove, handleChangeFirstlove, refreshFirstlove] = useForm('');
+   const [firstlove, setFirstLove, handleChangeFirstlove] = useForm('');
    const [addFirstlove, setAddFirstlove] = useState(false);
-   const [student, isChangedStudent, handleChangeStudent, refreshStudent] = useForm('');
+   const [student, setStudent, handleChangeStudent] = useForm('');
    const [addStudent, setAddStudent] = useState(false);
-   const [profession, isChangedProfession, handleChangeProfession, refreshProfession] = useForm('');
+   const [profession, setProfession, handleChangeProfession] = useForm('');
    const [addProfession, setAddProfession] = useState(false);
-   const [home, isChangedHome, handleChangeHome, refreshHome] = useForm('');
+   const [home, setHome, handleChangeHome] = useForm('');
    const [addHome, setAddHome] = useState(false);
-   const [recipe, isChangedRecipe, handleChangeRecipe, refreshRecipe] = useForm('');
+   const [recipe, setRecipe, handleChangeRecipe] = useForm('');
    const [addRecipe, setAddRecipe] = useState(false);
 
    function hide() {setHideOptions(!hideOptions)}
@@ -105,25 +96,7 @@ function EditMemberPopup({ isOpen, onClose, member, onSubmit, newOne }) {
    function toggleHome() { setAddHome(!addHome) }
    function toggleRecipe() { setAddRecipe(!addRecipe) }
    
-   // проверка ошибок в обязательных полях:
-
-   useEffect(() => {checkNameError(name)}, [name]);
-   useEffect(() => {checkSurnameError(surname)}, [surname]);
-   useEffect(() => {checkPatronymicError(patronymic)}, [patronymic]);
-
-   function onClickMale() {
-      if (!male) {setMale(true); setFemale(false); setNogender(false); setGender('Male'); setGenderError('')
-      } else { setMale(false); setFemale(false); setNogender(false); setGender(''); setGenderError('Поле не может быть пустым')}}
-   function onClickFemale() {
-      if (!female) {setFemale(true); setMale(false); setNogender(false); setGender('Female'); setGenderError('')
-      } else {setMale(false); setFemale(false); setNogender(false); setGender(''); setGenderError('Поле не может быть пустым')}}
-   function onClickNoGender() {
-      if (!nogender) {setNogender(true); setMale(false); setFemale(false); setGender('NoGender'); setGenderError('')
-      } else {setMale(false); setFemale(false); setNogender(false); setGender(''); setGenderError('Поле не может быть пустым')}}   
-
-   useEffect(() => {checkDateBirthError(dateBirth, dateBirthNotSet)}, [dateBirth, dateBirthNotSet]);
-   function checkBirthNonSet() { setDateBirthNotSet(!dateBirthNotSet) }
-   
+   // проверка ошибок и обновление полей:
    useEffect(() => {
       checkButton();
    }, [surnameError, nameError, patronymicError, genderError, dateBirthError])   
@@ -144,13 +117,64 @@ function EditMemberPopup({ isOpen, onClose, member, onSubmit, newOne }) {
    }
 
    useEffect(() => {
-      //refreshName();
+      if (isOpen) {
+         setName(member.name);
+         setGender(member.gender);
+         setDateBirth(member.dateBirth);
+         setSurname(member.surname);
+         setPatronymic(member.patronymic);
+         setBiography(member.biography);
+         setHobby(member.hobby);
+         setAchievements(member.achievements);
+         setRewards(member.rewards);
+         setTrips(member.trips);
+         setBooks(member.books);
+         setSport(member.sport);
+         setMusic(member.music);
+         setCinema(member.cinema);
+         setGames(member.games);
+         setSchoolmates(member.schoolmates);
+         setFirstLove(member.firstlove);
+         setStudent(member.student);
+         setProfession(member.profession);
+         setHome(member.home);
+         setRecipe(member.recipe);
+      } else {
+         setName('');
+         setGender('');
+         setDateBirth('');
+         setSurname('');
+         setPatronymic('');
+         setBiography('');
+         setHobby('');
+         setAchievements('');
+         setRewards('');
+         setTrips('');
+         setBooks('');
+         setSport('');
+         setMusic('');
+         setCinema('');
+         setGames('');
+         setSchoolmates('');
+         setFirstLove('');
+         setStudent('');
+         setProfession('');
+         setHome('');
+         setRecipe('');
+      }
       setDisableButton(true);
    }, [isOpen]);
 
+   // рендер
+
    return (
       <section className={`popup ${isOpen && 'popup_open'}`}>
-         <div className="popup__content popup__content_fullscreen">
+         <Resizable
+            defaultSize={{ width: '90%', height: 'auto' }}
+            enable={{ top: false, right: true, bottom: false, left: true, topRight: false, bottomRight: false, bottomLeft: false, topLeft: false }}
+            maxWidth = {'100%'}
+            bounds = {'parent'}
+            className="popup__content popup__content_fullscreen">
             <form onSubmit={handleSubmit} name='register' className="popup__form">
                <button onClick={onClose} type="button" className="popup__close"></button>
                <h2 className="popup__title">{title}</h2>
@@ -181,48 +205,14 @@ function EditMemberPopup({ isOpen, onClose, member, onSubmit, newOne }) {
                   </div>
                </div>
                <div className='popup__person_input_block'>
-                  {addSurname &&
-                     <div className='popup__person-input_container'>
-                        <label className="popup__person-input_label">Фамилия</label>
-                        <input onBlur={setBlurSurame} onChange={handleChangeSurname} value={surname} type="text" name="surname" className="popup__person-input popup__person-input_small" placeholder="Фамилия" />
-                        <button onClick={toggleSurname} className="popup__person-input_delete"></button>
-                        {(blurSurname && surnameError) && <p className='popup__person-input_error'>{surnameError}</p>}
-                     </div>
-                  }   
-                  <div className='popup__person-input_container'>
-                     <label className="popup__person-input_label">Имя</label>
-                     <input onBlur={ setBlurName } onChange={handleChangeName} value={name} type="text" name="name" required className="popup__person-input popup__person-input_small" placeholder="Имя" />
-                     {(blurName && nameError) && <p className='popup__person-input_error'>{ nameError }</p>}
-                  </div>
-                  {addPatronymic &&
-                     <div className='popup__person-input_container'>
-                        <label className="popup__person-input_label">Отчество</label>
-                        <input onBlur={setBlurPatronymic} onChange={handleChangePatronymic} value={patronymic} type="text" name="patronymic" className="popup__person-input popup__person-input_small" placeholder="Отчество" />
-                        <button onClick={togglePatronymic} className="popup__person-input_delete"></button>
-                        {(blurPatronymic && patronymicError) && <p className='popup__person-input_error'>{patronymicError}</p>}
-                     </div>}   
-                  <div className='popup__person-input_container'>
-                     <label className="popup__person-input_label">Пол</label>
-                     <div onClick={onClickMale} className="popup__person-input_gender">
-                        <FontAwesomeIcon icon={faPerson} style={{ color: `${!male? '#969BA2': '#394650'}` }} transform="grow-9" />
-                     </div>
-                     <div onClick={onClickFemale} className="popup__person-input_gender">
-                        <FontAwesomeIcon icon={faPersonDress} style={{ color: `${!female? '#969BA2': '#394650'}` }} transform="grow-9" />
-                     </div>
-                     <div onClick={onClickNoGender} className="popup__person-input_gender">
-                        <FontAwesomeIcon icon={faPersonCircleQuestion} style={{ color: `${!nogender? '#969BA2': '#394650'}` }} transform="grow-9" />
-                     </div>  
-                     {(genderError) && <p className='popup__person-input_error'>{ genderError }</p>}
-                  </div>                  
+                  {addSurname && <ShortTextInput input={surname} handleChangeInput={handleChangeSurname} name='Фамилия' required={false} toggleInput={toggleSurname} inputError={surnameError} checkInputError={checkSurnameError} />}   
+                  <ShortTextInput input={name} handleChangeInput={handleChangeName} name='Имя' required={true} inputError={nameError} checkInputError={checkNameError} />
+                  {addPatronymic && <ShortTextInput input={patronymic} handleChangeInput={handleChangePatronymic} name='Отчество' required={false} toggleInput={togglePatronymic} inputError={patronymicError} checkInputError={checkPatronymicError} />}   
+                  <GenderInput gender={gender} setGender={setGender} genderError={genderError} setGenderError={setGenderError} />
                </div>
-               <div className='popup__person-input_container'>
-                  <label className="popup__person-input_label">Дата рождения</label>
-                  <input onBlur={ setBlurDateBirth } onChange={handleChangeDateBirth} value={dateBirth} type="date" name="dateBirth" className="popup__person-input popup__person-input_small" placeholder="" />
-                  {(blurDateBirth && dateBirthError) && <p className='popup__person-input_error'>{dateBirthError}</p>}
-                  <div onClick={checkBirthNonSet} className={classCheckBirth}>
-                  </div>
-                  <p className="popup__person-input_label">Не известна</p>
-               </div> 
+               <div className='popup__person_input_block'>
+                  <DateInput input={dateBirth} handleChangeInput={handleChangeDateBirth} name='Дата рождения' inputError={dateBirthError} checkInputError={checkDateBirthError} />
+               </div>
                {addBiography && <OptionalTextInput input={biography} toggleInput={toggleBiography} handleChangeInput={handleChangeBiography} name='Биография'
                   placeholder='Краткая биография' />}
                {addHobby && <OptionalTextInput input={hobby} toggleInput={toggleHobby} handleChangeInput={handleChangeHobby} name='Хобби'
@@ -257,7 +247,7 @@ function EditMemberPopup({ isOpen, onClose, member, onSubmit, newOne }) {
                   placeholder='Рецепт какого торта передается в вашей семье из поколения в поколение?' />}
                <button type="submit" className="popup__button popup__button_small" disabled={disableButton}>{btnName}</button>
             </form>
-         </div>
+         </Resizable>
       </section>
    )
 }

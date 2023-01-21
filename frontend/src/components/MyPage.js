@@ -12,11 +12,13 @@ import EditMemberPopup from './EditMemberPopup'
 function MyPage({loggedIn, logOut, currentUser}) {
   const [isNewMemberPopupOpen, setNewMemberPopupOpen] = useState(false);
   const [member, setMember] = useState({});
+  // eslint-disable-next-line no-unused-vars
   const [newOne, setNewOne] = useState(true);
 
   function newMember() {
     setMember({
-    surname: '', name: '', patronymic: '', date_birth: {}, date_death: {}, country: '', region: '',
+      surname: '', name: '', patronymic: '', date_birth: {}, date_death: {},
+      //country: '', region: '',
       biography: '', hobby: '', achievements: '', rewards: '', trips: '', books: '', sport: '', music: '', 
       cinema: '', games: '', schoolmates: '', firstlove: '', student: '', profession: '', home: '', recipe: ''
     });

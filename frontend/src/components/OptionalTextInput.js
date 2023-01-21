@@ -1,21 +1,11 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from 'react';
-import { ValidateShortInput } from '../hooks/ValidateShortInput';
+import React from 'react';
 
 function OptionalTextInput({ input, toggleInput, handleChangeInput, name, placeholder }) {
-   const [inputError, checkInputError] = ValidateShortInput();
-   const [blurInput, setBlurInput] = useState(false);
-   
-   useEffect(() => {
-      checkInputError(input);
-   }, [input]);
-
    return (
       <div className='popup__person-input_container'>
          <label className="popup__person-input_label">{ name }</label>
-         <textarea onBlur={setBlurInput} onChange={handleChangeInput} value={input} autocomplete="off" placeholder={placeholder} wrap="hard" className="popup__person-input popup__person-input_long"></textarea>
+         <textarea onChange={handleChangeInput} value={input} autoComplete="off" placeholder={placeholder} wrap="hard" maxLength="1500" className="popup__person-input popup__person-input_long"></textarea>
          <button onClick={toggleInput} className="popup__person-input_delete"></button>
-         {(blurInput && inputError) && <p className='popup__person-input_error'>{inputError}</p>}
       </div>              
    )
 }
