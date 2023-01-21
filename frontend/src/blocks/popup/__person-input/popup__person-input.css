@@ -3,7 +3,8 @@
    display: flex;
    flex-direction: row;
    flex-wrap: wrap;
-   column-gap: 40px;
+   column-gap: 20px;
+   row-gap: 10px;
 }
 
 
@@ -11,8 +12,12 @@
    position: relative;
    display: flex;
    flex-direction: row;
-   align-items: center;
    min-height: 40px;
+}
+
+.popup__person-input_container_date{
+   flex-direction: row;
+   max-width: 110px;
 }
 
 .popup__person-input{
@@ -35,11 +40,12 @@
 .popup__person-input_small{
    width: 200px;
    height: 20px;
+   margin-top: -5px;
 }
 
 .popup__person-input_long{
    width: 80%;
-   max-width: 550px;
+   max-width: 575px;
    min-height: 40px;
 }
 
@@ -49,17 +55,23 @@
    }
 }
 
+.popup__person-input_date{
+   width: 95px;
+   font-family: 'Exo2';
+}
+
 .popup__person-input_checkbox{
-   margin: 0 10px;
+   margin: 0px 5px 10px 0;
    position: relative;
    border: 0.5px solid var(--colorBackground);
    border-radius: 10px;
-   width: 30px;
+   width: 25px;
    height: 10px;
    background-color: #fff;
+   display: inline-block;
 }
 
-.popup__person-input_checkbox::after{
+.popup__person-input_checkbox::before{
    content: '';
    position: absolute;
    left: 1.5px;
@@ -74,34 +86,95 @@
    transition: all 0.5s ease;
 }
 
+.popup__person-input_checkbox::after{
+   content: 'Только год';
+   position: absolute;
+   left: 40px;
+   top: 5px;
+   font-family: 'Exo2';
+   font-size: 12px;
+   font-weight: 200;
+   margin: 0;
+   display: inline-block;
+   width: 60px;
+}
+
 .popup__person-input_gender{
-   width: 40px;
+   padding-left: 20px;
+   padding-bottom: 10px;
+   width: 20px;
    height: 20px;
 }
 
-.popup__person-input_checkbox_checked:after{
+.popup__person-input_checkbox_checked::before{
    content: '';
-   left: 20px;
-   background-color: var(--colorBrand);
+   left: 16px;
+   background-color: var(--colorBackground);
+}
+
+.popup__person-input_now{
+   margin: 0px 5px 10px 0;
+   position: relative;
+   border: 0.5px solid var(--colorBackground);
+   border-radius: 10px;
+   width: 25px;
+   height: 10px;
+   background-color: #fff;
+   display: inline-block;
+}
+
+.popup__person-input_now::after {
+   content: 'по н.в.';
+   position: absolute;
+   left: 40px;
+   top: 5px;
+   font-family: 'Exo2';
+   font-size: 12px;
+   font-weight: 200;
+   margin: 0;
+   display: inline-block;
+   width: 60px;
+}
+
+.popup__person-input_now::before {
+   content: '';
+   position: absolute;
+   left: 1.5px;
+   top: 0.5px;
+   width: 15px;
+   height: 15px;
+   border: 0.5px solid var(--colorBackground);
+   border-radius: 50%;
+   font-size: 10px;
+   text-align: center;
+   padding-top: 0.5px;
+   transition: all 0.5s ease;
+}
+
+.popup__person-input_now_checked::before{
+   content: '';
+   left: 16px;
+   background-color: var(--colorBackground);
 }
 
 .popup__person-input_label{
    font-family: 'Exo2';
    font-size: 14px;
    font-weight: 200;
-   margin: 0 10px 10px 0px;
+   margin: 0 5px 0px 0px;
    display: inline-block;
    width: 90px;
    min-width: 90px;
    align-self: flex-start;
+   display: inline-block;
 }
 
 .popup__person-input_error{
    color: #925F61;
    position: absolute;
-   top: 30px;
+   bottom: -5px;
    margin: 0;
-   left: 105px;
+   left: 100px;
    font-size: 11px;
    width: 100%;
 }

@@ -24,7 +24,12 @@ function EditMemberPopup({ isOpen, onClose, member, onSubmit, newOne }) {
    const [genderError, setGenderError] = useState('');
 
    const [dateBirth, setDateBirth, handleChangeDateBirth] = useForm('');
-   const [dateBirthError, checkDateBirthError] = ValidateDate();  
+   const [yearBirth, setYearBirth, handleChangeYearBirth] = useForm('')
+   const [dateBirthError, checkDateBirthError] = ValidateDate();
+
+   const [dateDeath, setDateDeath, handleChangeDateDeath] = useForm('');
+   const [yearDeath, setYearDeath, handleChangeYearDeath] = useForm('')
+   const [dateDeathError, checkDateDeathError] = ValidateDate();
 
    // const [country, setCountry, handleChangeCountry] = useForm('');
    // const [countryError, checkCountryError] = ValidateShortInput(); 
@@ -96,16 +101,22 @@ function EditMemberPopup({ isOpen, onClose, member, onSubmit, newOne }) {
    function toggleHome() { setAddHome(!addHome) }
    function toggleRecipe() { setAddRecipe(!addRecipe) }
    
-   // проверка ошибок и обновление полей:
+   // проверка ошибок:
    useEffect(() => {
       checkButton();
-   }, [surnameError, nameError, patronymicError, genderError, dateBirthError])   
+   }, [surnameError, nameError, patronymicError, genderError, dateBirthError, addSurname, addPatronymic])   
 
    function checkButton() {
-      if (!nameError && !surnameError && !patronymicError && !dateBirthError) {
+      if (!nameError &&
+         (!surnameError || !addSurname) &&
+         (!patronymicError || !addPatronymic) &&
+         !dateBirthError &&
+         !genderError) {
          setDisableButton(false)
       } else setDisableButton(true)
    }
+
+   // отправка формы и обновлеие полей:
 
    function handleSubmit(e) {
       e.preventDefault();
@@ -172,15 +183,19 @@ function EditMemberPopup({ isOpen, onClose, member, onSubmit, newOne }) {
          <Resizable
             defaultSize={{ width: '90%', height: 'auto' }}
             enable={{ top: false, right: true, bottom: false, left: true, topRight: false, bottomRight: false, bottomLeft: false, topLeft: false }}
-            maxWidth = {'100%'}
-            bounds = {'parent'}
+            maxWidth={'100%'}
             className="popup__content popup__content_fullscreen">
             <form onSubmit={handleSubmit} name='register' className="popup__form">
                <button onClick={onClose} type="button" className="popup__close"></button>
                <h2 className="popup__title">{title}</h2>
                <div className='popup__choice-container'>
                   <div className={classInsideContainer}>
-                     <p className='popup__choice-into'>Добавить информацию</p>
+                     <p className='popup__choice-into'>Выберите то, что хотите сохранить в памяти</p>
+                     <p className='popup__choice-into'>Июньские зори, июльские полдни, августовские вечера — все прошло, кончилось,
+                        ушло навсегда и осталось только в памяти. Теперь впереди долгая осень, белая зима, прохладная зеленеющая весна,
+                        и за это время нужно обдумать минувшее лето и подвести итог. А если он что-нибудь забудет — что ж,
+                        в погребе стоит вино из одуванчиков, на каждой бутылке выведено число, и в них — все дни лета, все до единого.
+                        (Рэй Брэдбери, "Вино из одуванчиков")</p>
                      {!addSurname && <button onClick={toggleSurname} className='popup__choice-button' type='button'>Фамилия</button>}
                      {!addPatronymic && <button onClick={togglePatronymic} className='popup__choice-button' type='button'>Отчество</button>}
                      {!addBiography && <button onClick={toggleBiography} className='popup__choice-button' type='button'>Биография</button>}
@@ -195,7 +210,7 @@ function EditMemberPopup({ isOpen, onClose, member, onSubmit, newOne }) {
                      {!addGames && <button onClick={toggleGames} className='popup__choice-button' type='button'>Детские игры</button>}
                      {!addSchoolmates && <button onClick={toggleSchoolmates} className='popup__choice-button' type='button'>Школьные друзья</button>}
                      {!addFirstlove && <button onClick={toggleFirstlove} className='popup__choice-button' type='button'>Первая любовь</button>}
-                     {!addStudent && <button onCanPlay={toggleStudent} className='popup__choice-button' type='button'>Студенческие годы</button>}
+                     {!addStudent && <button onClick={toggleStudent} className='popup__choice-button' type='button'>Студенческие годы</button>}
                      {!addProfession && <button onClick={toggleProfession} className='popup__choice-button' type='button'>Работа и профессия</button>}
                      {!addHome && <button onClick={toggleHome} className='popup__choice-button' type='button'>Дом и быт</button>}
                      {!addRecipe && <button onClick={toggleRecipe} className='popup__choice-button' type='button'>Фирменные рецепты</button>}
@@ -211,7 +226,9 @@ function EditMemberPopup({ isOpen, onClose, member, onSubmit, newOne }) {
                   <GenderInput gender={gender} setGender={setGender} genderError={genderError} setGenderError={setGenderError} />
                </div>
                <div className='popup__person_input_block'>
-                  <DateInput input={dateBirth} handleChangeInput={handleChangeDateBirth} name='Дата рождения' inputError={dateBirthError} checkInputError={checkDateBirthError} />
+                  <DateInput date={dateBirth} setDate={setDateBirth} handleChangeDate={handleChangeDateBirth} year={yearBirth} setYear={setYearBirth} handleChangeYear={handleChangeYearBirth} name='Годы жизни' inputError={dateBirthError} checkInputError={checkDateBirthError} needsLabel={ true } mayBeUnset= { false } />
+                  <p>-</p>
+                  <DateInput date={dateDeath} setDate={setDateDeath} handleChangeDate={handleChangeDateDeath} year={yearDeath} setYear={setYearDeath} handleChangeYear={handleChangeYearDeath} name='Годы жизни' inputError={dateDeathError} checkInputError={checkDateDeathError} needsLabel={false} mayBeUnset= { true } />
                </div>
                {addBiography && <OptionalTextInput input={biography} toggleInput={toggleBiography} handleChangeInput={handleChangeBiography} name='Биография'
                   placeholder='Краткая биография' />}

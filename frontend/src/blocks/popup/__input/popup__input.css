@@ -17,6 +17,8 @@
 
 .popup__input_hidden{
    visibility: hidden;
+   height: 0px;
+   margin: -20px 0 0 0;
 }
 
 .popup__input:focus{

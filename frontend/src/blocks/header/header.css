@@ -17,6 +17,7 @@
    justify-content: space-between;
    padding: 10px 40px;
    box-sizing: border-box;
+   z-index: 1;
 }
 
 .header_hidden{

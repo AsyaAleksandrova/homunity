@@ -12,8 +12,6 @@
    z-index: 1;
    opacity: 0;
    visibility: hidden;
-   overflow-y: auto;
-   overflow-x: hidden;
    transition: all 0.7s ease;
    --colorBackground: #394650;
    --colorMain: #E7E6E9;
