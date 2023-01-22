@@ -6,7 +6,7 @@ import * as auth from '../utils/auth';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import ProtectedRoute from './ProtectedRoute';
 import Main from './Main';
-import Accept from './Accept'
+import AcceptEmail from './AcceptEmail'
 import RegisterPopup from "./RegisterPopup";
 import LoginPopup from "./LoginPopup";
 import RefreshPassPopup from './RefreshPassPopup';
@@ -263,6 +263,9 @@ function App() {
           loggedIn={loggedIn}
           logOut={logOut}
           currentUser={currentUser}
+          setIsInfoPopupOpen={setIsInfoPopupOpen}
+          setInfoTitle={setInfoTitle}
+          setInfoMessage={setInfoMessage}
           component={MyPage}
         /> 
 
@@ -270,7 +273,7 @@ function App() {
           <Main handleLoginClick={handleLoginClick} handleRegisterClick={handleRegisterClick} />
         </Route> 
         <Route path="/accept">
-          <Accept confirmEmail={ confirmEmail } />
+          <AcceptEmail confirmEmail={ confirmEmail } />
         </Route>
         <Route path="/auth/refresh/pass/">
           <ChangePass changePass={ changePassLink } />

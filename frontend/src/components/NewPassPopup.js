@@ -17,7 +17,9 @@ function NewPassPopup({ isOpen, onClose, onSubmit }) {
       setIsChangedPass(false)
       setBlurPass(false);
       setDisableButton(true);
-      setEmail(localStorage.getItem('email'));
+      if (localStorage.getItem('email')) {
+         setEmail(localStorage.getItem('email'));
+      } else{setEmail('')}
    }, [isOpen]);
    
    useEffect(() => {
@@ -53,7 +55,7 @@ function NewPassPopup({ isOpen, onClose, onSubmit }) {
                <button onClick={onClose} type="button" className="popup__close"></button>
                <h2 className="popup__title">Смена пароля</h2>
                <p className='popup__text'>Укажите новый пароль для {email}</p>
-               <input onChange={handleChangeEmail} value={email} type="email" name="email" autoComplete='username' className='popup__input_hidden'  />
+               <input onChange={handleChangeEmail} value={email} type="email" name="email" autoComplete='username' disabled className='popup__input_hidden'  />
                <div className='popup__input-container'>
                   <span className={`popup__input-placeholder ${isChangedPass && 'popup__input-placeholder_active'}`}>Пароль</span>
                   <input onBlur={ setBlurPass } onChange={handleChangePassword} value={password} type="password" name="password" autoComplete="current-password" required minLength="8" maxLength="30" className="popup__input popup__input_last" placeholder="" />

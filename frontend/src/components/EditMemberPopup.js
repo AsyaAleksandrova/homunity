@@ -8,8 +8,9 @@ import ShortTextInput from './ShortTextInput';
 import GenderInput from './GenderInput';
 import DateInput from './DateInput'
 import OptionalTextInput from './OptionalTextInput';
+import PhotoInput from './PhotoInput';
 
-function EditMemberPopup({ isOpen, onClose, member, onSubmit, newOne }) {
+function EditMemberPopup({ isOpen, onClose, member, onSubmit, newOne, setIsInfoPopupOpen, setInfoTitle, setInfoMessage }) {
    const title = `${newOne ? 'Новая карточка члена семьи' : 'Редактирование карточки'} `
    const [btnName, setBtnName] = useState('Сохранить');
    const [disableButton, setDisableButton] = useState(true);
@@ -31,15 +32,25 @@ function EditMemberPopup({ isOpen, onClose, member, onSubmit, newOne }) {
    const [yearDeath, setYearDeath, handleChangeYearDeath] = useForm('')
    const [dateDeathError, checkDateDeathError] = ValidateDate();
 
+   const [dateError, setDateError] = useState('');
+   useEffect(() => {
+      if (dateBirthError === '') {
+         setDateError(dateDeathError);
+      }
+   }, [dateBirthError, dateDeathError])
+
    // const [country, setCountry, handleChangeCountry] = useForm('');
-   // const [countryError, checkCountryError] = ValidateShortInput(); 
+   // const [countryError, checkCountryError] = ValidateShortInput();
    // const [addCountry, setAddCountry] = useState(false);
 
    // const [region, setRegion, handleChangeRegion] = useForm('');
-   // const [regionError, checkRegionyError] = ValidateShortInput(); 
+   // const [regionError, checkRegionyError] = ValidateShortInput();
    // const [addRegion, setAddRegion] = useState(false);
 
    // опциональные поля:
+   const [photo, setPhoto] = useState({});
+   const [addPhoto, setAddPhoto] = useState(false);
+
    const [surname, setSurname, handleChangeSurname] = useForm('');
    const [surnameError, checkSurnameError] = ValidateShortInput(); 
    const [addSurname, setAddSurname] = useState(false);
@@ -81,25 +92,26 @@ function EditMemberPopup({ isOpen, onClose, member, onSubmit, newOne }) {
    const [recipe, setRecipe, handleChangeRecipe] = useForm('');
    const [addRecipe, setAddRecipe] = useState(false);
 
-   function hide() {setHideOptions(!hideOptions)}
-   function toggleSurname() {setAddSurname(!addSurname)}
-   function togglePatronymic() {setAddPatronymic(!addPatronymic)}
-   function toggleBiography() {setAddBiography(!addBiography)}
-   function toggleHobby() { setAddHobby(!addHobby) }
+   function hide() { setHideOptions(!hideOptions) }
+   function togglePhoto() { setAddPhoto(!addPhoto);  if(!addPhoto){setPhoto({})}}
+   function toggleSurname() { setAddSurname(!addSurname);  if(!addSurname){setSurname('')}}
+   function togglePatronymic() { setAddPatronymic(!addPatronymic);  if(!addPatronymic){setPatronymic('')}}
+   function toggleBiography() { setAddBiography(!addBiography); if(!addBiography){setBiography('')}}
+   function toggleHobby() { setAddHobby(!addHobby); if(!addHobby){setHobby('')}}
    function toggleAchievements() { setAddAchievements(!addAchievements) }
-   function toggleRewards() { setAddRewards(!addRewards) }
-   function toggleTrips() { setAddTrips(!addTrips) }
-   function toggleBooks() { setAddBooks(!addBooks) }
-   function toggleSport() { setAddSport(!addSport) }
-   function toggleMusic() { setAddMusic(!addMusic) }
-   function toggleCinema() { setAddCinema(!addCinema) }
-   function toggleGames() { setAddGames(!addGames) }
-   function toggleSchoolmates() { setAddSchoolmates(!addSchoolmates) }
-   function toggleFirstlove() { setAddFirstlove(!addFirstlove) }
-   function toggleStudent() { setAddStudent(!addStudent) }
-   function toggleProfession() { setAddProfession(!addProfession) }
-   function toggleHome() { setAddHome(!addHome) }
-   function toggleRecipe() { setAddRecipe(!addRecipe) }
+   function toggleRewards() { setAddRewards(!addRewards); if(!addRewards){setRewards('')}}
+   function toggleTrips() { setAddTrips(!addTrips); if(!addTrips){setTrips('')}}
+   function toggleBooks() { setAddBooks(!addBooks); if(!addBooks){setBooks('')}}
+   function toggleSport() { setAddSport(!addSport); if(!addSport) {setSport('')}}
+   function toggleMusic() { setAddMusic(!addMusic); if(!addMusic) {setMusic('')}}
+   function toggleCinema() { setAddCinema(!addCinema); if(!addCinema){setCinema('')}}
+   function toggleGames() { setAddGames(!addGames); if(!addGames){setGames('')}}
+   function toggleSchoolmates() { setAddSchoolmates(!addSchoolmates); if(!addSchoolmates){setSchoolmates('')}}
+   function toggleFirstlove() { setAddFirstlove(!addFirstlove); if(!addFirstlove){setFirstLove('')}}
+   function toggleStudent() { setAddStudent(!addStudent); if(!addStudent){setStudent('')}}
+   function toggleProfession() { setAddProfession(!addProfession); if(!addProfession){setProfession('')}}
+   function toggleHome() { setAddHome(!addHome); if(!addHome){setHome('')}}
+   function toggleRecipe() { setAddRecipe(!addRecipe); if(!addRecipe){setRecipe('')}}
    
    // проверка ошибок:
    useEffect(() => {
@@ -120,7 +132,7 @@ function EditMemberPopup({ isOpen, onClose, member, onSubmit, newOne }) {
 
    function handleSubmit(e) {
       e.preventDefault();
-      setBtnName('Сораняем...');
+      setBtnName('Сохраняем...');
       onSubmit({ surname, name, patronymic, dateBirth })
          .finally(() => {
             setBtnName('Сохранить')
@@ -129,6 +141,7 @@ function EditMemberPopup({ isOpen, onClose, member, onSubmit, newOne }) {
 
    useEffect(() => {
       if (isOpen) {
+         setPhoto({});
          setName(member.name);
          setGender(member.gender);
          setDateBirth(member.dateBirth);
@@ -151,27 +164,16 @@ function EditMemberPopup({ isOpen, onClose, member, onSubmit, newOne }) {
          setHome(member.home);
          setRecipe(member.recipe);
       } else {
-         setName('');
-         setGender('');
-         setDateBirth('');
-         setSurname('');
-         setPatronymic('');
-         setBiography('');
-         setHobby('');
-         setAchievements('');
-         setRewards('');
-         setTrips('');
-         setBooks('');
-         setSport('');
-         setMusic('');
-         setCinema('');
-         setGames('');
-         setSchoolmates('');
-         setFirstLove('');
-         setStudent('');
-         setProfession('');
-         setHome('');
-         setRecipe('');
+         setPhoto({}); setName(''); setGender(''); setDateBirth(''); setSurname(''); setPatronymic('');
+         setBiography(''); setHobby(''); setAchievements(''); setRewards(''); setTrips('');
+         setBooks(''); setSport(''); setMusic(''); setCinema(''); setGames(''); setSchoolmates('');
+         setFirstLove(''); setStudent(''); setProfession(''); setHome(''); setRecipe('');
+         setHideOptions(true)
+         setAddSurname(false); setAddPatronymic(false); setAddBiography(false); setAddHobby(false);
+         setAddAchievements(false); setAddRewards(false); setAddTrips(false); setAddBooks(false);
+         setAddSport(false); setAddMusic(false); setAddCinema(false); setAddGames(false);
+         setAddSchoolmates(false); setAddFirstlove(false); setAddStudent(false); setAddProfession(false);
+         setAddHome(false); setAddRecipe(false);
       }
       setDisableButton(true);
    }, [isOpen]);
@@ -179,7 +181,7 @@ function EditMemberPopup({ isOpen, onClose, member, onSubmit, newOne }) {
    // рендер
 
    return (
-      <section className={`popup ${isOpen && 'popup_open'}`}>
+      <section className={`popup popup_fullscreen ${isOpen && 'popup_open'}`}>
          <Resizable
             defaultSize={{ width: '90%', height: 'auto' }}
             enable={{ top: false, right: true, bottom: false, left: true, topRight: false, bottomRight: false, bottomLeft: false, topLeft: false }}
@@ -196,6 +198,7 @@ function EditMemberPopup({ isOpen, onClose, member, onSubmit, newOne }) {
                         и за это время нужно обдумать минувшее лето и подвести итог. А если он что-нибудь забудет — что ж,
                         в погребе стоит вино из одуванчиков, на каждой бутылке выведено число, и в них — все дни лета, все до единого.
                         (Рэй Брэдбери, "Вино из одуванчиков")</p>
+                     {!addPhoto && <button onClick={togglePhoto} className='popup__choice-button' type='button'>Фото</button>}
                      {!addSurname && <button onClick={toggleSurname} className='popup__choice-button' type='button'>Фамилия</button>}
                      {!addPatronymic && <button onClick={togglePatronymic} className='popup__choice-button' type='button'>Отчество</button>}
                      {!addBiography && <button onClick={toggleBiography} className='popup__choice-button' type='button'>Биография</button>}
@@ -220,19 +223,24 @@ function EditMemberPopup({ isOpen, onClose, member, onSubmit, newOne }) {
                   </div>
                </div>
                <div className='popup__person_input_block'>
+                  {addPhoto && <PhotoInput toggleInput={togglePhoto} setInput={setPhoto} name='Фото' setIsInfoPopupOpen={setIsInfoPopupOpen} setInfoTitle={setInfoTitle} setInfoMessage={setInfoMessage} />}
                   {addSurname && <ShortTextInput input={surname} handleChangeInput={handleChangeSurname} name='Фамилия' required={false} toggleInput={toggleSurname} inputError={surnameError} checkInputError={checkSurnameError} />}   
                   <ShortTextInput input={name} handleChangeInput={handleChangeName} name='Имя' required={true} inputError={nameError} checkInputError={checkNameError} />
                   {addPatronymic && <ShortTextInput input={patronymic} handleChangeInput={handleChangePatronymic} name='Отчество' required={false} toggleInput={togglePatronymic} inputError={patronymicError} checkInputError={checkPatronymicError} />}   
                   <GenderInput gender={gender} setGender={setGender} genderError={genderError} setGenderError={setGenderError} />
                </div>
                <div className='popup__person_input_block'>
-                  <DateInput date={dateBirth} setDate={setDateBirth} handleChangeDate={handleChangeDateBirth} year={yearBirth} setYear={setYearBirth} handleChangeYear={handleChangeYearBirth} name='Годы жизни' inputError={dateBirthError} checkInputError={checkDateBirthError} needsLabel={ true } mayBeUnset= { false } />
-                  <p>-</p>
-                  <DateInput date={dateDeath} setDate={setDateDeath} handleChangeDate={handleChangeDateDeath} year={yearDeath} setYear={setYearDeath} handleChangeYear={handleChangeYearDeath} name='Годы жизни' inputError={dateDeathError} checkInputError={checkDateDeathError} needsLabel={false} mayBeUnset= { true } />
+                  <div className='popup__person-input_container'>
+                     <label className="popup__person-input_label">Годы жизни</label>
+                     <DateInput date={dateBirth} setDate={setDateBirth} handleChangeDate={handleChangeDateBirth} year={yearBirth} setYear={setYearBirth} handleChangeYear={handleChangeYearBirth} checkInputError={checkDateBirthError} mayBeTillNow= { false } />
+                     <p> - </p>
+                     <DateInput date={dateDeath} setDate={setDateDeath} handleChangeDate={handleChangeDateDeath} year={yearDeath} setYear={setYearDeath} handleChangeYear={handleChangeYearDeath} checkInputError={checkDateDeathError} mayBeTillNow={true} />
+                     {dateError && <p className='popup__person-input_error popup__person-input_error_date'>{dateError}</p>}
+                  </div> 
                </div>
                {addBiography && <OptionalTextInput input={biography} toggleInput={toggleBiography} handleChangeInput={handleChangeBiography} name='Биография'
                   placeholder='Краткая биография' />}
-               {addHobby && <OptionalTextInput input={hobby} toggleInput={toggleHobby} handleChangeInput={handleChangeHobby} name='Хобби'
+               {addHobby && <OptionalTextInput input={hobby} toggleInput={toggleHobby} handleChangeInput={handleChangeHobby} name='Увлечения'
                   placeholder='Хобби' />}
                {addAchievements && <OptionalTextInput input={achievements} toggleInput={toggleAchievements} handleChangeInput={handleChangeAchievements} name='Достижения'
                   placeholder='Чем можно гордиться' />}

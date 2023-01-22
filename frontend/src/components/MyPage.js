@@ -9,7 +9,7 @@ import Header from './Header';
 import EditMemberPopup from './EditMemberPopup'
 
 
-function MyPage({loggedIn, logOut, currentUser}) {
+function MyPage({loggedIn, logOut, currentUser, setIsInfoPopupOpen, setInfoTitle, setInfoMessage}) {
   const [isNewMemberPopupOpen, setNewMemberPopupOpen] = useState(false);
   const [member, setMember] = useState({});
   // eslint-disable-next-line no-unused-vars
@@ -17,7 +17,7 @@ function MyPage({loggedIn, logOut, currentUser}) {
 
   function newMember() {
     setMember({
-      surname: '', name: '', patronymic: '', date_birth: {}, date_death: {},
+      photo: {}, surname: '', name: '', patronymic: '', dateBirth: '', dateDeath: '',
       //country: '', region: '',
       biography: '', hobby: '', achievements: '', rewards: '', trips: '', books: '', sport: '', music: '', 
       cinema: '', games: '', schoolmates: '', firstlove: '', student: '', profession: '', home: '', recipe: ''
@@ -26,7 +26,7 @@ function MyPage({loggedIn, logOut, currentUser}) {
   }
   
   function saveMember() {
-
+    setNewMemberPopupOpen(false);
   }
 
   function cancelEdit() {
@@ -53,7 +53,16 @@ function MyPage({loggedIn, logOut, currentUser}) {
             </li>
           </ul>
         </div>
-        <EditMemberPopup isOpen={isNewMemberPopupOpen} onClose={cancelEdit} member={member} onSubmit={saveMember} newOne={newOne} />
+        <EditMemberPopup
+          isOpen={isNewMemberPopupOpen}
+          onClose={cancelEdit}
+          member={member}
+          onSubmit={saveMember}
+          newOne={newOne}
+          setIsInfoPopupOpen={setIsInfoPopupOpen}
+          setInfoTitle={setInfoTitle}
+          setInfoMessage={setInfoMessage}
+        />
       </section>
      </main>
   );

@@ -44,3 +44,16 @@
 .popup__button_small{
    width: 150px;
 }
+
+.popup__button_accept{
+   width: 100px;
+   margin: 10px 10px 0 0;
+   background-color: var(--colorLightAccent);
+   font-size: 14px;
+}
+
+.popup__button_cancel{
+   width: 100px;
+   margin: 10px 10px 0 0;
+   font-size: 14px;
+}

@@ -7,7 +7,6 @@ function InformPopup({ isOpen, onClose, title, message }) {
          <div className="popup__content">
             <h2 className="popup__title">{ title }</h2>
             <p className='popup__text'>{ message }</p>
-            <p className='popup__question'>Остались вопросы? <button type='button' className='popup__link'>&rarr; ЗАПОЛНИТЕ ФОРМУ ОБРАТНОЙ СВЯЗИ</button></p>
             <button onClick={onClose} type="button" className="popup__button">OK</button>
          </div>
       </section>
