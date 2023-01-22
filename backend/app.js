@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const cors = require('cors')
+const cors = require('cors');
+const fileUpload = require('express-fileupload');
 const { errors } = require('celebrate');
 const errorHandler = require('./middlewares/errorhandler');
 const NotFoundError = require('./errors/NotFoundError');
@@ -20,6 +21,7 @@ app.use(cors({
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(fileUpload({}))
 
 mongoose.set('strictQuery', true);
 mongoose.connect(MONGO_SERVER, {
@@ -27,6 +29,8 @@ mongoose.connect(MONGO_SERVER, {
 });
 
 app.use('/auth', require('./routes/auth'));
+app.use('/member', require('./routes/member'));
+app.use('/file', require('./routes/file'));
 
 app.use((req, res, next) => {
   next(new NotFoundError('Не корректно задан адрес запроса'));

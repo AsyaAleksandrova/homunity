@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const uuid = require('uuid')
 const User = require('../models/user');
 const MailService = require('../services/MailService');
+const FileService = require('../services/FileService');
 const { NODE_ENV, JWT_KEY, BACK_ORIGIN, FRONT_ORIGIN } = process.env;
 
 const MONGO_DUPLICATE_ERROR_CODE = 11000;
@@ -20,6 +21,7 @@ module.exports.createUser = (req, res, next) => {
     .then((hash) => User.create({ ...req.body, password: hash, activationlink: `${process.env.BACK_ORIGIN}/auth/activate/${activationlink}` }))
     .then((user) => MailService.sendActivationMail(user))
     .then((user) => {
+      FileService.createFile({owner: user, path:''})
       const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_KEY : 'dev-secret', { expiresIn: '10d' });
       res
         .cookie('jwt', token, { maxAge: 10 * 24 * 60 * 60 * 1000, httpOnly: true, SameSite: 'Lax', Secure: true })

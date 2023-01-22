@@ -13,7 +13,6 @@ class MailService{
         pass: APP_PASS
       }
     });
-
   }
 
 // !!!!!! после тестирования заменить почту на user.email во всех рассылках
@@ -132,7 +131,6 @@ class MailService{
     })
     return(user)
   }
-
-}
+};
 
 module.exports = new MailService;

@@ -13,15 +13,16 @@ function PhotoInput({ toggleInput, setInput, name, setIsInfoPopupOpen, setInfoTi
    function onLoadFile(e) {
       e.preventDefault();
       let file = e.target.files[0];
-      if (file.size < 500001) {
-         setInput(file)
-         fileReader.readAsDataURL(file);
-      } else {
-         setInfoTitle('Ошибка загрузки файла');
-         setInfoMessage('Превышенн максимально допустимый размер изображения. Пожалуйста, воспользуйтесь бесплатными онлайн-сервисами для сжатия изображений');
-         setIsInfoPopupOpen(true);
+      if (file) {
+         if (file.size < 500001) {
+            setInput(file)
+            fileReader.readAsDataURL(file);
+         } else {
+            setInfoTitle('Ошибка загрузки файла');
+            setInfoMessage('Превышен максимально допустимый размер изображения. Пожалуйста, воспользуйтесь бесплатными онлайн-сервисами для сжатия изображений');
+            setIsInfoPopupOpen(true);
+         }
       }
-      
    }
 
    function closeAcceptDeletePoput() {
