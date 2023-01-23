@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from '../hooks/useForm';
 import { ValidatePassword } from '../hooks/ValidatePassword';
 
-function NewPassPopup({ isOpen, onClose, onSubmit }) {
+function PopupNewPass({ isOpen, onClose, onSubmit }) {
    const [btnName, setBtnName] = useState('Сохранить');
    const [email, setEmail, handleChangeEmail] = useForm('');
    const [password, setPassword, handleChangePassword] = useForm('');
@@ -69,4 +69,4 @@ function NewPassPopup({ isOpen, onClose, onSubmit }) {
    )
 }
 
-export default NewPassPopup;
+export default PopupNewPass;

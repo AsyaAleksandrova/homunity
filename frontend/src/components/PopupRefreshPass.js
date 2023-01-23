@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from '../hooks/useForm';
 import { ValidateEmail } from '../hooks/ValidateEmail';
 
-function RefreshPassPopup({ isOpen, onClose, onSubmit, login }) { 
+function PopupRefreshPass({ isOpen, onClose, onSubmit, login }) { 
    const [btnName, setBtnName] = useState('Отправить');
    const [email, setEmail, handleChangeEmail] = useForm('');
    const [isChangedEmail, setIsChangedEmail] = useState(false);
@@ -67,4 +67,4 @@ function RefreshPassPopup({ isOpen, onClose, onSubmit, login }) {
    )
 }
 
-export default RefreshPassPopup;
+export default PopupRefreshPass;

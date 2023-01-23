@@ -4,7 +4,7 @@ import { faPerson } from '@fortawesome/free-solid-svg-icons';
 import { faPersonDress } from '@fortawesome/free-solid-svg-icons';
 import { faPersonCircleQuestion } from '@fortawesome/free-solid-svg-icons';
 
-function GenderInput({ gender, setGender, genderError, setGenderError, blurGender ,setBlurGender }) {
+function InputGender({ gender, setGender, genderError, setGenderError, blurGender ,setBlurGender }) {
    const [male, setMale] = useState(false);
    const [female, setFemale] = useState(false);
    const [nogender, setNogender] = useState(false);
@@ -42,4 +42,4 @@ function GenderInput({ gender, setGender, genderError, setGenderError, blurGende
    )
 }
 
-export default GenderInput;
+export default InputGender;

@@ -1,6 +1,6 @@
 import React from 'react';
 
-function InformPopup({ isOpen, onClose, title, message }) {
+function PopupInform({ isOpen, onClose, title, message }) {
    const className = `popup popup_type_inform ${isOpen && 'popup_open'}`;
    return (
       <section className={className}>
@@ -13,4 +13,4 @@ function InformPopup({ isOpen, onClose, title, message }) {
    )
 }
 
-export default InformPopup;
+export default PopupInform;

@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from '../hooks/useForm';
 
-function DateInput({ input, setInput, checkInputError, mayBeTillNow, blurInput, setBlurInput }) {
+function InputDate({ input, setInput, checkInputError, mayBeTillNow, blurInput, setBlurInput }) {
    const [date, setDate, handleChangeDate] = useForm('');
    const [year, setYear, handleChangeYear] = useForm('')
    const [dateNotSet, setdateNotSet] = useState(false);
@@ -57,4 +57,4 @@ function DateInput({ input, setInput, checkInputError, mayBeTillNow, blurInput, 
    )
 }
 
-export default DateInput;
+export default InputDate;

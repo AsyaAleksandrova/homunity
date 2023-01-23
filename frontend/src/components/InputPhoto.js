@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
-import AcceptDeletePopup from './AcceptDeletePopup';
+import React, { useEffect, useState } from 'react';
+import PopupAcceptDelete from './PopupAcceptDelete';
 
-function PhotoInput({ toggleInput, setInput, name, setIsInfoPopupOpen, setInfoTitle, setInfoMessage }) {
-   const [acceptDeletePopupOpen, setAcceptDeletePopupOpen] = useState(false);
+function InputPhoto({ toggleInput, input, setInput, name, setIsInfoPopupOpen, setInfoTitle, setInfoMessage }) {
+   const [PopupAcceptDeleteOpen, setPopupAcceptDeleteOpen] = useState(false);
    const [url, setUrl] = useState('')
    const fileReader = new FileReader();
+
+   useEffect(() => { if (!input.size) { setUrl('') } }, [input]);
 
    fileReader.onloadend = () => {
       setUrl(fileReader.result);
@@ -26,10 +28,10 @@ function PhotoInput({ toggleInput, setInput, name, setIsInfoPopupOpen, setInfoTi
    }
 
    function closeAcceptDeletePoput() {
-      setAcceptDeletePopupOpen(false)
+      setPopupAcceptDeleteOpen(false)
    };
    function acceptDeletion() {
-      setAcceptDeletePopupOpen(false);
+      setPopupAcceptDeleteOpen(false);
       toggleInput();
    }
 
@@ -41,10 +43,10 @@ function PhotoInput({ toggleInput, setInput, name, setIsInfoPopupOpen, setInfoTi
          </label>
          <input onChange={onLoadFile} type='file' accept="image/*, .png, .jpg, .jpeg" id='photo' className="popup__person-input popup__person-input_photo" />
          <p className='popup__person-input_photo-text'>Размер файла не должен превышать 0.5 Мб. При необходимости, воспользуйтесь бесплатными онлайн-сервисами для сжатия изображений</p>
-         <button type='button' onClick={setAcceptDeletePopupOpen} className="popup__person-input_delete"></button>
-         <AcceptDeletePopup isOpen={acceptDeletePopupOpen} onAccept={acceptDeletion} onClose={closeAcceptDeletePoput} />
+         <button type='button' onClick={setPopupAcceptDeleteOpen} className="popup__person-input_delete"></button>
+         <PopupAcceptDelete isOpen={PopupAcceptDeleteOpen} onAccept={acceptDeletion} onClose={closeAcceptDeletePoput} />
       </div>              
    )
 }
 
-export default PhotoInput;
+export default InputPhoto;

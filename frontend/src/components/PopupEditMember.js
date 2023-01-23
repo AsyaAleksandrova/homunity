@@ -4,13 +4,13 @@ import { useForm } from '../hooks/useForm';
 import {Resizable} from 're-resizable'
 import { ValidateShortInput } from '../hooks/ValidateShortInput';
 import { ValidateDate } from '../hooks/ValidateDate';
-import ShortTextInput from './ShortTextInput';
-import GenderInput from './GenderInput';
-import DateInput from './DateInput'
-import OptionalTextInput from './OptionalTextInput';
-import PhotoInput from './PhotoInput';
+import InputShortText from './InputShortText';
+import InputGender from './InputGender';
+import InputDate from './InputDate'
+import InputOptionalText from './InputOptionalText';
+import InputPhoto from './InputPhoto';
 
-function EditMemberPopup({ isOpen, onClose, member,  onSubmit, newOne, setIsInfoPopupOpen, setInfoTitle, setInfoMessage }) {
+function PopupEditMember({ isOpen, onClose, member,  onSubmit, newOne, setIsInfoPopupOpen, setInfoTitle, setInfoMessage }) {
    const title = `${newOne ? 'Новая карточка члена семьи' : 'Редактирование карточки'} `
    const [btnName, setBtnName] = useState('Сохранить');
    const [disableButton, setDisableButton] = useState(true);
@@ -246,56 +246,56 @@ function EditMemberPopup({ isOpen, onClose, member,  onSubmit, newOne, setIsInfo
                </div>
                <div className='popup__person_input_block'>
                   {addPhoto &&
-                     <PhotoInput toggleInput={togglePhoto} setInput={setPhoto} name='Фото' setIsInfoPopupOpen={setIsInfoPopupOpen} setInfoTitle={setInfoTitle} setInfoMessage={setInfoMessage} />}
+                     <InputPhoto toggleInput={togglePhoto} input={photo} setInput={setPhoto} name='Фото' setIsInfoPopupOpen={setIsInfoPopupOpen} setInfoTitle={setInfoTitle} setInfoMessage={setInfoMessage} />}
                   {addSurname &&
-                     <ShortTextInput input={surname} handleChangeInput={handleChangeSurname} name='Фамилия' required={false} toggleInput={toggleSurname}
+                     <InputShortText input={surname} handleChangeInput={handleChangeSurname} name='Фамилия' required={false} toggleInput={toggleSurname}
                         inputError={surnameError} checkInputError={checkSurnameError} blurInput={blurSurname} setBlurInput={setBlurSurname} />}   
-                  <ShortTextInput input={name} handleChangeInput={handleChangeName} name='Имя' required={true} inputError={nameError} checkInputError={checkNameError} blurInput={blurName} setBlurInput={setBlurName} />
+                  <InputShortText input={name} handleChangeInput={handleChangeName} name='Имя' required={true} inputError={nameError} checkInputError={checkNameError} blurInput={blurName} setBlurInput={setBlurName} />
                   {addPatronymic &&
-                     <ShortTextInput input={patronymic} handleChangeInput={handleChangePatronymic} name='Отчество' required={false} toggleInput={togglePatronymic}
+                     <InputShortText input={patronymic} handleChangeInput={handleChangePatronymic} name='Отчество' required={false} toggleInput={togglePatronymic}
                         inputError={patronymicError} checkInputError={checkPatronymicError} blurInput={blurPatronymic} setBlurInput={setBlurPatronymic} />}   
-                  <GenderInput gender={gender} setGender={setGender} genderError={genderError} setGenderError={setGenderError} blurGender={blurGender} setBlurGender={setBlurGender} />
+                  <InputGender gender={gender} setGender={setGender} genderError={genderError} setGenderError={setGenderError} blurGender={blurGender} setBlurGender={setBlurGender} />
                </div>
                <div className='popup__person_input_block'>
                   <div className='popup__person-input_container'>
                      <label className="popup__person-input_label">Годы жизни</label>
-                     <DateInput input={yearsOfLifeStart} setInput={setYearsOfLifeStart} checkInputError={checkDateBirthError} mayBeTillNow={false} blurInput={blurBirth} setBlurInput={setBlurBirth}  />
+                     <InputDate input={yearsOfLifeStart} setInput={setYearsOfLifeStart} checkInputError={checkDateBirthError} mayBeTillNow={false} blurInput={blurBirth} setBlurInput={setBlurBirth}  />
                      <p> - </p>
-                     <DateInput input={yearsOfLifeEnd} setInput={setYearsOfLifeEnd} checkInputError={checkDateDeathError} mayBeTillNow={true} blurInput={blurDeath} setBlurInput={setBlurDeath} />
+                     <InputDate input={yearsOfLifeEnd} setInput={setYearsOfLifeEnd} checkInputError={checkDateDeathError} mayBeTillNow={true} blurInput={blurDeath} setBlurInput={setBlurDeath} />
                      {dateError && <p className='popup__person-input_error popup__person-input_error_date'>{dateError}</p>}
                   </div> 
                </div>
-               {addBiography && <OptionalTextInput input={biography} toggleInput={toggleBiography} handleChangeInput={handleChangeBiography} name='Биография'
+               {addBiography && <InputOptionalText input={biography} toggleInput={toggleBiography} handleChangeInput={handleChangeBiography} name='Биография'
                   placeholder='Краткая биография' />}
-               {addHobby && <OptionalTextInput input={hobby} toggleInput={toggleHobby} handleChangeInput={handleChangeHobby} name='Увлечения'
+               {addHobby && <InputOptionalText input={hobby} toggleInput={toggleHobby} handleChangeInput={handleChangeHobby} name='Увлечения'
                   placeholder='Хобби' />}
-               {addAchievements && <OptionalTextInput input={achievements} toggleInput={toggleAchievements} handleChangeInput={handleChangeAchievements} name='Достижения'
+               {addAchievements && <InputOptionalText input={achievements} toggleInput={toggleAchievements} handleChangeInput={handleChangeAchievements} name='Достижения'
                   placeholder='Чем можно гордиться' />}
-               {addRewards && <OptionalTextInput input={rewards} toggleInput={toggleRewards} handleChangeInput={handleChangeRewards} name='Награды'
+               {addRewards && <InputOptionalText input={rewards} toggleInput={toggleRewards} handleChangeInput={handleChangeRewards} name='Награды'
                   placeholder='Сохранились ли школьные грамоты за конкурс рисунка?' />}
-               {addTrips && <OptionalTextInput input={trips} toggleInput={toggleTrips} handleChangeInput={handleChangeTrips} name='Путешествия'
+               {addTrips && <InputOptionalText input={trips} toggleInput={toggleTrips} handleChangeInput={handleChangeTrips} name='Путешествия'
                   placeholder='Сейчас мы свободны путешествовать по всему миру, но во времена СССР поездки были редкими, а значит, запоминающимися на всю жизнь' />}
-               {addBooks && <OptionalTextInput input={books} toggleInput={toggleBooks} handleChangeInput={handleChangeBooks} name='Книги которые вдохновляли'
+               {addBooks && <InputOptionalText input={books} toggleInput={toggleBooks} handleChangeInput={handleChangeBooks} name='Книги которые вдохновляли'
                   placeholder='Возможно, что на книжной полке завалялась та самая книга, которая однажды изменила всю жизнь' />}
-               {addSport && <OptionalTextInput input={sport} toggleInput={toggleSport} handleChangeInput={handleChangeSport} name='Спорт'
+               {addSport && <InputOptionalText input={sport} toggleInput={toggleSport} handleChangeInput={handleChangeSport} name='Спорт'
                   placeholder='О спорт! Ты - мир! (как написал основатель современного олимпийского движения, французский общественный деятель Пьер де Кубертэн)' />}
-               {addMusic && <OptionalTextInput input={music} toggleInput={toggleMusic} handleChangeInput={handleChangeMusic} name='Любимая музыка'
+               {addMusic && <InputOptionalText input={music} toggleInput={toggleMusic} handleChangeInput={handleChangeMusic} name='Любимая музыка'
                   placeholder='А ваши родители танцевали под "Дюну"?' />}
-               {addCinema && <OptionalTextInput input={cinema} toggleInput={toggleCinema} handleChangeInput={handleChangeCinema} name='Театр и кино'
+               {addCinema && <InputOptionalText input={cinema} toggleInput={toggleCinema} handleChangeInput={handleChangeCinema} name='Театр и кино'
                   placeholder='Даже с появлением интернета они остаются актуальны' />}
-               {addGames && <OptionalTextInput input={games} toggleInput={toggleGames} handleChangeInput={handleChangeGames} name='Детские игры'
+               {addGames && <InputOptionalText input={games} toggleInput={toggleGames} handleChangeInput={handleChangeGames} name='Детские игры'
                   placeholder='Как давно существует игра "казаи-разбойники"?' />}
-               {addSchoolmates && <OptionalTextInput input={schoolmates} toggleInput={toggleSchoolmates} handleChangeInput={handleChangeSchoolmates} name='Школьные друзья'
+               {addSchoolmates && <InputOptionalText input={schoolmates} toggleInput={toggleSchoolmates} handleChangeInput={handleChangeSchoolmates} name='Школьные друзья'
                   placeholder='Говорят, школьная дружба самая крепкая. Согласны?' />}
-               {addFirstlove && <OptionalTextInput input={firstlove} toggleInput={toggleFirstlove} handleChangeInput={handleChangeFirstlove} name='Первая любовь'
+               {addFirstlove && <InputOptionalText input={firstlove} toggleInput={toggleFirstlove} handleChangeInput={handleChangeFirstlove} name='Первая любовь'
                   placeholder='Небось опять отличница с двоечником?' />}
-               {addStudent && <OptionalTextInput input={student} toggleInput={toggleStudent} handleChangeInput={handleChangeStudent} name='Студенческие годы'
+               {addStudent && <InputOptionalText input={student} toggleInput={toggleStudent} handleChangeInput={handleChangeStudent} name='Студенческие годы'
                   placeholder='Первая парта или последние ряды в аудитории?' />}
-               {addProfession && <OptionalTextInput input={profession} toggleInput={toggleProfession} handleChangeInput={handleChangeProfession} name='Работа и профессия'
+               {addProfession && <InputOptionalText input={profession} toggleInput={toggleProfession} handleChangeInput={handleChangeProfession} name='Работа и профессия'
                   placeholder='Работа занимает большую часть нашего времени, поэтому важно найти свое призвание, чтобы основное время мы проводили с интересом и удовольствием!' />}
-               {addHome && <OptionalTextInput input={home} toggleInput={toggleHome} handleChangeInput={handleChangeHome} name='Дом и быт'
+               {addHome && <InputOptionalText input={home} toggleInput={toggleHome} handleChangeInput={handleChangeHome} name='Дом и быт'
                   placeholder='Пробовали на современных картах с панорамой найти дом, в котором жили 100 лет назад ваши предки?' />}
-               {addRecipe && <OptionalTextInput input={recipe} toggleInput={toggleRecipe} handleChangeInput={handleChangeRecipe} name='Фирменные рецепты'
+               {addRecipe && <InputOptionalText input={recipe} toggleInput={toggleRecipe} handleChangeInput={handleChangeRecipe} name='Фирменные рецепты'
                   placeholder='Рецепт какого торта передается в вашей семье из поколения в поколение?' />}
                <button type="submit" className="popup__button popup__button_small" disabled={disableButton}>{btnName}</button>
             </form>
@@ -304,4 +304,4 @@ function EditMemberPopup({ isOpen, onClose, member,  onSubmit, newOne, setIsInfo
    )
 }
 
-export default EditMemberPopup;
+export default PopupEditMember;

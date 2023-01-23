@@ -6,7 +6,7 @@ import { faBinoculars } from '@fortawesome/free-solid-svg-icons';
 import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
 import { faUserMinus } from '@fortawesome/free-solid-svg-icons';
 import Header from './Header';
-import EditMemberPopup from './EditMemberPopup';
+import PopupEditMember from './PopupEditMember';
 import * as familyApi from '../utils/familyApi';
 
 
@@ -78,7 +78,7 @@ function MyPage({loggedIn, logOut, currentUser, setIsInfoPopupOpen, setInfoTitle
             </li>
           </ul>
         </div>
-        <EditMemberPopup
+        <PopupEditMember
           isOpen={isNewMemberPopupOpen}
           onClose={cancelEdit}
           member={member}

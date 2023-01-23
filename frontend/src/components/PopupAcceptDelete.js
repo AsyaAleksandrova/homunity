@@ -1,6 +1,6 @@
 import React from 'react';
 
-function AcceptDeletePopup({ isOpen, onClose, onAccept }) {
+function PopupAcceptDelete({ isOpen, onClose, onAccept }) {
    const className = `popup popup_type_inform ${isOpen && 'popup_open'}`;
    return (
       <section className={className}>
@@ -14,4 +14,4 @@ function AcceptDeletePopup({ isOpen, onClose, onAccept }) {
    )
 }
 
-export default AcceptDeletePopup;
+export default PopupAcceptDelete;

@@ -8,24 +8,24 @@ import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import ProtectedRoute from './ProtectedRoute';
 import Main from './Main';
 import AcceptEmail from './AcceptEmail'
-import RegisterPopup from "./RegisterPopup";
-import LoginPopup from "./LoginPopup";
-import RefreshPassPopup from './RefreshPassPopup';
+import PopupRegister from "./PopupRegister";
+import PopupLogin from "./PopupLogin";
+import PopupRefreshPass from './PopupRefreshPass';
 import ChangePass from './ChangePass';
-import NewPassPopup from './NewPassPopup';
-import InformPopup from "./InformPopup";
+import PopupNewPass from './PopupNewPass';
+import PopupInform from "./PopupInform";
 import MyPage from './MyPage';
 
 function App() {
   const history = useHistory();
-  const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
-  const [isRegisterPopupOpen, setIsRegisterPopupOpen] = useState(false);
-  const [isRefreshPassPopupOpen, setIsRefreshPassPopupOpen] = useState(false);
-  const [isNewPassPopupOpen, setIsNewPassPopupOpen] = useState(false);
+  const [isPopupLoginOpen, setIsPopupLoginOpen] = useState(false);
+  const [isPopupRegisterOpen, setIsPopupRegisterOpen] = useState(false);
+  const [isPopupRefreshPassOpen, setIsPopupRefreshPassOpen] = useState(false);
+  const [isPopupNewPassOpen, setIsPopupNewPassOpen] = useState(false);
   const [isInfoPopupOpen, setIsInfoPopupOpen] = useState(false);
   const [infoTitle, setInfoTitle] = useState('');
   const [infoMessage, setInfoMessage] = useState('');
-  const isOpen = isLoginPopupOpen || isRegisterPopupOpen || isInfoPopupOpen;
+  const isOpen = isPopupLoginOpen || isPopupRegisterOpen || isInfoPopupOpen;
   const [currentUser, setCurrentUser] = useState({name: '', email: '', _id: ''});
   const [loggedIn, setLoggedIn] = useState(false);
   const [myFamily, setMyFamily] = useState({});
@@ -143,7 +143,7 @@ function App() {
       .then((res) => {
         localStorage.setItem('user_id', res.user._id);
         localStorage.setItem('email', res.user.email );
-        setIsNewPassPopupOpen(true);
+        setIsPopupNewPassOpen(true);
       })
       .catch((e) => {
         closeAllPopups();
@@ -202,7 +202,7 @@ function App() {
       .catch((e) => {
         localStorage.removeItem('user_id');
         history.push('/main')
-        setIsRegisterPopupOpen(false);
+        setIsPopupRegisterOpen(false);
         setInfoTitle('Ошибка получения данных о пользователе. Необходима авторизация.');
         setInfoMessage('Что-то пошло не так. Попробуйте повторить запрос.');
         setIsInfoPopupOpen(true);
@@ -217,24 +217,24 @@ function App() {
   
   const handleLoginClick = () => {
     closeAllPopups();
-    setIsLoginPopupOpen(true);
+    setIsPopupLoginOpen(true);
   }
 
   const handleRegisterClick = () => {
     closeAllPopups();
-    setIsRegisterPopupOpen(true);
+    setIsPopupRegisterOpen(true);
   }
 
   const handleRefreshClick = () => {
     closeAllPopups();
-    setIsRefreshPassPopupOpen(true);
+    setIsPopupRefreshPassOpen(true);
   }  
    
   const closeAllPopups = () => {
-    setIsLoginPopupOpen(false);
-    setIsRegisterPopupOpen(false);
-    setIsRefreshPassPopupOpen(false);
-    setIsNewPassPopupOpen(false);
+    setIsPopupLoginOpen(false);
+    setIsPopupRegisterOpen(false);
+    setIsPopupRefreshPassOpen(false);
+    setIsPopupNewPassOpen(false);
     setIsInfoPopupOpen(false);
     setInfoTitle('');
     setInfoMessage('');
@@ -280,11 +280,11 @@ function App() {
 
       </Switch>
 
-      <RegisterPopup isOpen={isRegisterPopupOpen} onClose={closeAllPopups} onSubmit={registerUser} login={handleLoginClick} />
-      <LoginPopup isOpen={isLoginPopupOpen} onClose={closeAllPopups} onSubmit={loginUser} refreshPass={handleRefreshClick} />
-      <RefreshPassPopup isOpen={isRefreshPassPopupOpen} onClose={closeAllPopups} onSubmit={refreshLink} login={handleLoginClick} />
-      <NewPassPopup isOpen={isNewPassPopupOpen} onClose={getAppData} onSubmit={refreshPass} />
-      <InformPopup isOpen={isInfoPopupOpen} onClose={closeAllPopups} title={infoTitle} message={infoMessage} />
+      <PopupRegister isOpen={isPopupRegisterOpen} onClose={closeAllPopups} onSubmit={registerUser} login={handleLoginClick} />
+      <PopupLogin isOpen={isPopupLoginOpen} onClose={closeAllPopups} onSubmit={loginUser} refreshPass={handleRefreshClick} />
+      <PopupRefreshPass isOpen={isPopupRefreshPassOpen} onClose={closeAllPopups} onSubmit={refreshLink} login={handleLoginClick} />
+      <PopupNewPass isOpen={isPopupNewPassOpen} onClose={getAppData} onSubmit={refreshPass} />
+      <PopupInform isOpen={isInfoPopupOpen} onClose={closeAllPopups} title={infoTitle} message={infoMessage} />
 
     </CurrentUserContext.Provider>
   );
