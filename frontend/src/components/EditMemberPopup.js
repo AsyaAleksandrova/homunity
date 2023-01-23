@@ -20,15 +20,19 @@ function EditMemberPopup({ isOpen, onClose, member,  onSubmit, newOne, setIsInfo
    
    const [name, setName, handleChangeName] = useForm('');
    const [nameError, checkNameError] = ValidateShortInput();
+   const [blurName, setBlurName] = useState(false);
 
    const [gender, setGender] = useState('');
    const [genderError, setGenderError] = useState('');
+   const [blurGender, setBlurGender] = useState(false);
 
    const [yearsOfLifeStart, setYearsOfLifeStart] = useState({strictDate: '', year: ''});
    const [dateBirthError, checkDateBirthError] = ValidateDate();
+   const [blurBirth, setBlurBirth] = useState(false);
 
    const [yearsOfLifeEnd, setYearsOfLifeEnd] = useState({strictDate: '', year: '', tillNow: true});
    const [dateDeathError, checkDateDeathError] = ValidateDate();
+   const [blurDeath, setBlurDeath] = useState(false);
 
    const [dateError, setDateError] = useState('');
    useEffect(() => {
@@ -51,11 +55,13 @@ function EditMemberPopup({ isOpen, onClose, member,  onSubmit, newOne, setIsInfo
 
    const [surname, setSurname, handleChangeSurname] = useForm('');
    const [surnameError, checkSurnameError] = ValidateShortInput(); 
+   const [blurSurname, setBlurSurname] = useState(false);
    const [addSurname, setAddSurname] = useState(false);
 
    const [patronymic, setPatronymic, handleChangePatronymic] = useForm('');
    const [patronymicError, checkPatronymicError] = ValidateShortInput(); 
-   const [addPatronymic, setAddPatronymic] = useState(false);   
+   const [blurPatronymic, setBlurPatronymic] = useState(false);
+   const [addPatronymic, setAddPatronymic] = useState(false);
 
    const [biography, setBiography, handleChangeBiography] = useForm('');
    const [addBiography, setAddBiography] = useState(false);
@@ -114,14 +120,16 @@ function EditMemberPopup({ isOpen, onClose, member,  onSubmit, newOne, setIsInfo
    // проверка ошибок:
    useEffect(() => {
       checkButton();
-   }, [surnameError, nameError, patronymicError, genderError, dateError, addSurname, addPatronymic])   
+   }, [surnameError, nameError, patronymicError, genderError, dateError, addSurname, addPatronymic, blurName, blurSurname, blurPatronymic, blurGender, blurBirth, blurDeath])   
 
    function checkButton() {
-      if (!nameError &&
-         (!surnameError || !addSurname) &&
-         (!patronymicError || !addPatronymic) &&
-         !dateError &&
-         !genderError) {
+      if (
+         (!nameError && blurName) &&
+         ((!surnameError ) || !addSurname) &&
+         ((!patronymicError ) || !addPatronymic) &&
+         (!dateError && blurBirth && (yearsOfLifeEnd.tillNow === true || !blurDeath)) &&
+         (!genderError && blurGender)
+      ) {
          setDisableButton(false)
       } else setDisableButton(true)
    }
@@ -133,9 +141,11 @@ function EditMemberPopup({ isOpen, onClose, member,  onSubmit, newOne, setIsInfo
       setBtnName('Сохраняем...');
       onSubmit({
          member: {
-            surname, name, patronymic, yearsOfLifeStart, yearsOfLifeEnd, biography, hobby,
-            achievements, rewards, trips, books, sport, music, cinema, games, schoolmates,
-            firstlove, student, profession, home, recipe
+            surname, name, patronymic, yearsOfLifeStart, yearsOfLifeEnd,
+            description: {
+               biography, hobby, achievements, rewards, trips,
+               books, sport, music, cinema, games, schoolmates,
+               firstlove, student, profession, home, recipe}
          },
          file: photo
       })
@@ -153,22 +163,22 @@ function EditMemberPopup({ isOpen, onClose, member,  onSubmit, newOne, setIsInfo
          setYearsOfLifeEnd(member.yearsOfLifeEnd);
          setSurname(member.surname);
          setPatronymic(member.patronymic);
-         setBiography(member.biography);
-         setHobby(member.hobby);
-         setAchievements(member.achievements);
-         setRewards(member.rewards);
-         setTrips(member.trips);
-         setBooks(member.books);
-         setSport(member.sport);
-         setMusic(member.music);
-         setCinema(member.cinema);
-         setGames(member.games);
-         setSchoolmates(member.schoolmates);
-         setFirstLove(member.firstlove);
-         setStudent(member.student);
-         setProfession(member.profession);
-         setHome(member.home);
-         setRecipe(member.recipe);
+         setBiography(member.description.biography);
+         setHobby(member.description.hobby);
+         setAchievements(member.description.achievements);
+         setRewards(member.description.rewards);
+         setTrips(member.description.trips);
+         setBooks(member.description.books);
+         setSport(member.description.sport);
+         setMusic(member.description.music);
+         setCinema(member.description.cinema);
+         setGames(member.description.games);
+         setSchoolmates(member.description.schoolmates);
+         setFirstLove(member.description.firstlove);
+         setStudent(member.description.student);
+         setProfession(member.description.profession);
+         setHome(member.description.home);
+         setRecipe(member.description.recipe);
       } else {
          setPhoto({}); setName(''); setGender(''); setYearsOfLifeStart({}); setYearsOfLifeEnd({}); setSurname(''); setPatronymic('');
          setBiography(''); setHobby(''); setAchievements(''); setRewards(''); setTrips('');
@@ -181,6 +191,12 @@ function EditMemberPopup({ isOpen, onClose, member,  onSubmit, newOne, setIsInfo
          setAddSchoolmates(false); setAddFirstlove(false); setAddStudent(false); setAddProfession(false);
          setAddHome(false); setAddRecipe(false);
       }
+      setBlurName(false);
+      setBlurSurname(false);
+      setBlurPatronymic(false);
+      setBlurGender(false);
+      setBlurBirth(false);
+      setBlurDeath(false);
       setDisableButton(true);
    }, [isOpen]);
 
@@ -229,18 +245,23 @@ function EditMemberPopup({ isOpen, onClose, member,  onSubmit, newOne, setIsInfo
                   </div>
                </div>
                <div className='popup__person_input_block'>
-                  {addPhoto && <PhotoInput toggleInput={togglePhoto} setInput={setPhoto} name='Фото' setIsInfoPopupOpen={setIsInfoPopupOpen} setInfoTitle={setInfoTitle} setInfoMessage={setInfoMessage} />}
-                  {addSurname && <ShortTextInput input={surname} handleChangeInput={handleChangeSurname} name='Фамилия' required={false} toggleInput={toggleSurname} inputError={surnameError} checkInputError={checkSurnameError} />}   
-                  <ShortTextInput input={name} handleChangeInput={handleChangeName} name='Имя' required={true} inputError={nameError} checkInputError={checkNameError} />
-                  {addPatronymic && <ShortTextInput input={patronymic} handleChangeInput={handleChangePatronymic} name='Отчество' required={false} toggleInput={togglePatronymic} inputError={patronymicError} checkInputError={checkPatronymicError} />}   
-                  <GenderInput gender={gender} setGender={setGender} genderError={genderError} setGenderError={setGenderError} />
+                  {addPhoto &&
+                     <PhotoInput toggleInput={togglePhoto} setInput={setPhoto} name='Фото' setIsInfoPopupOpen={setIsInfoPopupOpen} setInfoTitle={setInfoTitle} setInfoMessage={setInfoMessage} />}
+                  {addSurname &&
+                     <ShortTextInput input={surname} handleChangeInput={handleChangeSurname} name='Фамилия' required={false} toggleInput={toggleSurname}
+                        inputError={surnameError} checkInputError={checkSurnameError} blurInput={blurSurname} setBlurInput={setBlurSurname} />}   
+                  <ShortTextInput input={name} handleChangeInput={handleChangeName} name='Имя' required={true} inputError={nameError} checkInputError={checkNameError} blurInput={blurName} setBlurInput={setBlurName} />
+                  {addPatronymic &&
+                     <ShortTextInput input={patronymic} handleChangeInput={handleChangePatronymic} name='Отчество' required={false} toggleInput={togglePatronymic}
+                        inputError={patronymicError} checkInputError={checkPatronymicError} blurInput={blurPatronymic} setBlurInput={setBlurPatronymic} />}   
+                  <GenderInput gender={gender} setGender={setGender} genderError={genderError} setGenderError={setGenderError} blurGender={blurGender} setBlurGender={setBlurGender} />
                </div>
                <div className='popup__person_input_block'>
                   <div className='popup__person-input_container'>
                      <label className="popup__person-input_label">Годы жизни</label>
-                     <DateInput input={yearsOfLifeStart} setInput={setYearsOfLifeStart} checkInputError={checkDateBirthError} mayBeTillNow= { false } />
+                     <DateInput input={yearsOfLifeStart} setInput={setYearsOfLifeStart} checkInputError={checkDateBirthError} mayBeTillNow={false} blurInput={blurBirth} setBlurInput={setBlurBirth}  />
                      <p> - </p>
-                     <DateInput input={yearsOfLifeEnd} setInput={setYearsOfLifeEnd} checkInputError={checkDateDeathError} mayBeTillNow={true} />
+                     <DateInput input={yearsOfLifeEnd} setInput={setYearsOfLifeEnd} checkInputError={checkDateDeathError} mayBeTillNow={true} blurInput={blurDeath} setBlurInput={setBlurDeath} />
                      {dateError && <p className='popup__person-input_error popup__person-input_error_date'>{dateError}</p>}
                   </div> 
                </div>

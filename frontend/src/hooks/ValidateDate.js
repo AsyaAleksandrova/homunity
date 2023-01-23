@@ -22,6 +22,8 @@ export function ValidateDate() {
                   setError('Поле не может быть пустым');
                }
             }             
+         } else {
+            setError('');
          }
       }
    }

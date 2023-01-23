@@ -2,18 +2,20 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from '../hooks/useForm';
 
-function DateInput({ input, setInput, checkInputError, mayBeTillNow }) {
+function DateInput({ input, setInput, checkInputError, mayBeTillNow, blurInput, setBlurInput }) {
    const [date, setDate, handleChangeDate] = useForm('');
    const [year, setYear, handleChangeYear] = useForm('')
-   const [blurInput, setBlurInput] = useState(false);
    const [dateNotSet, setdateNotSet] = useState(false);
    const [now, setNow] = useState(false);
    const classCheckInput = `popup__person-input popup__person-input_checkbox ${dateNotSet && 'popup__person-input_checkbox_checked'}` 
    const classCheckNow = `popup__person-input popup__person-input_now ${now && 'popup__person-input_now_checked'}` 
    function checkdateNotSet() { setdateNotSet(!dateNotSet) }
-   function checkNow() { setNow(!now) }
+   function checkNow() { setNow(!now); setBlurInput(true) }
 
-   useEffect(() => { if (mayBeTillNow) { setNow(true) }}, [])
+   useEffect(() => { if (mayBeTillNow) { setNow(true) } }, [])
+   useEffect(() => {
+      if (!blurInput) { setDate(''); setYear('')}
+   }, [blurInput])
    useEffect(() => { checkInputError(date, year, blurInput, now) }, [date, year, blurInput, now]);
    useEffect(() => {
       if (dateNotSet) {setDate('')

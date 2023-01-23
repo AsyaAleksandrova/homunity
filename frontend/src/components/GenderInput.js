@@ -1,21 +1,27 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPerson } from '@fortawesome/free-solid-svg-icons';
 import { faPersonDress } from '@fortawesome/free-solid-svg-icons';
 import { faPersonCircleQuestion } from '@fortawesome/free-solid-svg-icons';
 
-function GenderInput({ gender, setGender, genderError, setGenderError }) {
+function GenderInput({ gender, setGender, genderError, setGenderError, blurGender ,setBlurGender }) {
    const [male, setMale] = useState(false);
    const [female, setFemale] = useState(false);
    const [nogender, setNogender] = useState(false);
+   useEffect(() => {
+      if (!blurGender) { setMale(false); setFemale(false);  setNogender(false) }
+   }, [blurGender])
    
    function onClickMale() {
+      setBlurGender(true);
       if (!male) {setMale(true); setFemale(false); setNogender(false); setGender('Male'); setGenderError('')
-      } else { setMale(false); setFemale(false); setNogender(false); setGender(''); setGenderError('Поле не может быть пустым')}}
+      } else { setMale(false); setFemale(false); setNogender(false); setGender(''); setGenderError('Поле не может быть пустым')}};
    function onClickFemale() {
+      setBlurGender(true);
       if (!female) {setFemale(true); setMale(false); setNogender(false); setGender('Female'); setGenderError('')
       } else {setMale(false); setFemale(false); setNogender(false); setGender(''); setGenderError('Поле не может быть пустым')}}
    function onClickNoGender() {
+      setBlurGender(true);
       if (!nogender) {setNogender(true); setMale(false); setFemale(false); setGender('NoGender'); setGenderError('')
       } else {setMale(false); setFemale(false); setNogender(false); setGender(''); setGenderError('Поле не может быть пустым')}}   
 

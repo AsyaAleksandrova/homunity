@@ -2,9 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import AcceptDeletePopup from './AcceptDeletePopup';
 
-function ShortTextInput({ input, handleChangeInput, name, required, toggleInput, inputError, checkInputError }) {
-   const [blurInput, setBlurInput] = useState(false);
-   
+function ShortTextInput({ input, handleChangeInput, name, required, toggleInput, inputError, checkInputError, blurInput, setBlurInput }) {
    useEffect(() => { checkInputError(input) }, [input]);
 
    const [acceptDeletePopupOpen, setAcceptDeletePopupOpen] = useState(false)
@@ -15,7 +13,7 @@ function ShortTextInput({ input, handleChangeInput, name, required, toggleInput,
    function acceptDeletion() {
       setAcceptDeletePopupOpen(false);
       toggleInput();
-   }   
+   }
 
    return (
       <div className='popup__person-input_container'>
