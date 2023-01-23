@@ -6,7 +6,8 @@ import { faBinoculars } from '@fortawesome/free-solid-svg-icons';
 import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
 import { faUserMinus } from '@fortawesome/free-solid-svg-icons';
 import Header from './Header';
-import EditMemberPopup from './EditMemberPopup'
+import EditMemberPopup from './EditMemberPopup';
+import * as familyApi from '../utils/familyApi';
 
 
 function MyPage({loggedIn, logOut, currentUser, setIsInfoPopupOpen, setInfoTitle, setInfoMessage}) {
@@ -17,16 +18,31 @@ function MyPage({loggedIn, logOut, currentUser, setIsInfoPopupOpen, setInfoTitle
 
   function newMember() {
     setMember({
-      photo: {}, surname: '', name: '', patronymic: '', dateBirth: '', dateDeath: '',
-      //country: '', region: '',
+      photo: {}, surname: '', name: '', patronymic: '', //country: '', region: '',
+      yearsOfLifeStart: { strictDate: '', year: '' }, yearsOfLifeEnd: { strictDate: '', year: '', tillNow: true },
       biography: '', hobby: '', achievements: '', rewards: '', trips: '', books: '', sport: '', music: '', 
       cinema: '', games: '', schoolmates: '', firstlove: '', student: '', profession: '', home: '', recipe: ''
     });
     setNewMemberPopupOpen(true);
   }
   
-  function saveMember() {
-    setNewMemberPopupOpen(false);
+  function saveMember({ member, file }) {
+    console.log(member)
+    return familyApi.createNewMember(member)
+     .then((res) => {
+        setNewMemberPopupOpen(false);
+      })
+      .catch((e) => {
+        setNewMemberPopupOpen(false);
+        setInfoTitle('Ошибка сохранения');
+        switch(e.status) {
+          case 400: setInfoMessage('Переданые некорректные данные при создании карточки.');
+            break;
+          default: setInfoMessage('Что-то пошло не так. Попробуйте повторить запрос.');
+            break;
+        }
+        setIsInfoPopupOpen(true);
+      });
   }
 
   function cancelEdit() {

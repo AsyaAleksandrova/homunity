@@ -10,7 +10,7 @@ import DateInput from './DateInput'
 import OptionalTextInput from './OptionalTextInput';
 import PhotoInput from './PhotoInput';
 
-function EditMemberPopup({ isOpen, onClose, member, onSubmit, newOne, setIsInfoPopupOpen, setInfoTitle, setInfoMessage }) {
+function EditMemberPopup({ isOpen, onClose, member,  onSubmit, newOne, setIsInfoPopupOpen, setInfoTitle, setInfoMessage }) {
    const title = `${newOne ? 'Новая карточка члена семьи' : 'Редактирование карточки'} `
    const [btnName, setBtnName] = useState('Сохранить');
    const [disableButton, setDisableButton] = useState(true);
@@ -24,12 +24,10 @@ function EditMemberPopup({ isOpen, onClose, member, onSubmit, newOne, setIsInfoP
    const [gender, setGender] = useState('');
    const [genderError, setGenderError] = useState('');
 
-   const [dateBirth, setDateBirth, handleChangeDateBirth] = useForm('');
-   const [yearBirth, setYearBirth, handleChangeYearBirth] = useForm('')
+   const [yearsOfLifeStart, setYearsOfLifeStart] = useState({strictDate: '', year: ''});
    const [dateBirthError, checkDateBirthError] = ValidateDate();
 
-   const [dateDeath, setDateDeath, handleChangeDateDeath] = useForm('');
-   const [yearDeath, setYearDeath, handleChangeYearDeath] = useForm('')
+   const [yearsOfLifeEnd, setYearsOfLifeEnd] = useState({strictDate: '', year: '', tillNow: true});
    const [dateDeathError, checkDateDeathError] = ValidateDate();
 
    const [dateError, setDateError] = useState('');
@@ -116,13 +114,13 @@ function EditMemberPopup({ isOpen, onClose, member, onSubmit, newOne, setIsInfoP
    // проверка ошибок:
    useEffect(() => {
       checkButton();
-   }, [surnameError, nameError, patronymicError, genderError, dateBirthError, addSurname, addPatronymic])   
+   }, [surnameError, nameError, patronymicError, genderError, dateError, addSurname, addPatronymic])   
 
    function checkButton() {
       if (!nameError &&
          (!surnameError || !addSurname) &&
          (!patronymicError || !addPatronymic) &&
-         !dateBirthError &&
+         !dateError &&
          !genderError) {
          setDisableButton(false)
       } else setDisableButton(true)
@@ -133,7 +131,14 @@ function EditMemberPopup({ isOpen, onClose, member, onSubmit, newOne, setIsInfoP
    function handleSubmit(e) {
       e.preventDefault();
       setBtnName('Сохраняем...');
-      onSubmit({ surname, name, patronymic, dateBirth })
+      onSubmit({
+         member: {
+            surname, name, patronymic, yearsOfLifeStart, yearsOfLifeEnd, biography, hobby,
+            achievements, rewards, trips, books, sport, music, cinema, games, schoolmates,
+            firstlove, student, profession, home, recipe
+         },
+         file: photo
+      })
          .finally(() => {
             setBtnName('Сохранить')
          });
@@ -144,7 +149,8 @@ function EditMemberPopup({ isOpen, onClose, member, onSubmit, newOne, setIsInfoP
          setPhoto({});
          setName(member.name);
          setGender(member.gender);
-         setDateBirth(member.dateBirth);
+         setYearsOfLifeStart(member.yearsOfLifeStart);
+         setYearsOfLifeEnd(member.yearsOfLifeEnd);
          setSurname(member.surname);
          setPatronymic(member.patronymic);
          setBiography(member.biography);
@@ -164,7 +170,7 @@ function EditMemberPopup({ isOpen, onClose, member, onSubmit, newOne, setIsInfoP
          setHome(member.home);
          setRecipe(member.recipe);
       } else {
-         setPhoto({}); setName(''); setGender(''); setDateBirth(''); setSurname(''); setPatronymic('');
+         setPhoto({}); setName(''); setGender(''); setYearsOfLifeStart({}); setYearsOfLifeEnd({}); setSurname(''); setPatronymic('');
          setBiography(''); setHobby(''); setAchievements(''); setRewards(''); setTrips('');
          setBooks(''); setSport(''); setMusic(''); setCinema(''); setGames(''); setSchoolmates('');
          setFirstLove(''); setStudent(''); setProfession(''); setHome(''); setRecipe('');
@@ -232,9 +238,9 @@ function EditMemberPopup({ isOpen, onClose, member, onSubmit, newOne, setIsInfoP
                <div className='popup__person_input_block'>
                   <div className='popup__person-input_container'>
                      <label className="popup__person-input_label">Годы жизни</label>
-                     <DateInput date={dateBirth} setDate={setDateBirth} handleChangeDate={handleChangeDateBirth} year={yearBirth} setYear={setYearBirth} handleChangeYear={handleChangeYearBirth} checkInputError={checkDateBirthError} mayBeTillNow= { false } />
+                     <DateInput input={yearsOfLifeStart} setInput={setYearsOfLifeStart} checkInputError={checkDateBirthError} mayBeTillNow= { false } />
                      <p> - </p>
-                     <DateInput date={dateDeath} setDate={setDateDeath} handleChangeDate={handleChangeDateDeath} year={yearDeath} setYear={setYearDeath} handleChangeYear={handleChangeYearDeath} checkInputError={checkDateDeathError} mayBeTillNow={true} />
+                     <DateInput input={yearsOfLifeEnd} setInput={setYearsOfLifeEnd} checkInputError={checkDateDeathError} mayBeTillNow={true} />
                      {dateError && <p className='popup__person-input_error popup__person-input_error_date'>{dateError}</p>}
                   </div> 
                </div>

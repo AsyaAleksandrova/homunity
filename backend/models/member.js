@@ -16,7 +16,6 @@ const memberSchema = new mongoose.Schema({
   },
   surname: {
     type: String,
-    minlength: 2,
     maxlength: 30,
   },
   name: {
@@ -27,7 +26,6 @@ const memberSchema = new mongoose.Schema({
   },
   patronymic: {
     type: String,
-    minlength: 2,
     maxlength: 30,
   },
   yearsOfLifeStart: {
@@ -38,12 +36,71 @@ const memberSchema = new mongoose.Schema({
     tillNow: {type: Boolean},
     strictDate: {type: Date},
     year: {type: Number}
+  },
+  biography: {
+    type: String,
+    maxlength: 1500
+  },
+  hobby: {
+    type: String,
+    maxlength: 1500
+  },
+  achievements: {
+    type: String,
+    maxlength: 1500
+  },
+  rewards: {
+    type: String,
+    maxlength: 1500
+  },
+  trips: {
+    type: String,
+    maxlength: 1500
+  },
+  books: {
+    type: String,
+    maxlength: 1500
+  },
+  sport: {
+    type: String,
+    maxlength: 1500
+  },
+  music: {
+    type: String,
+    maxlength: 1500
+  },
+  cinema: {
+    type: String,
+    maxlength: 1500
+  },
+  games: {
+    type: String,
+    maxlength: 1500
+  },
+  schoolmates: {
+    type: String,
+    maxlength: 1500
+  },
+  firstlove: {
+    type: String,
+    maxlength: 1500
+  },
+  student: {
+    type: String,
+    maxlength: 1500
+  },
+  profession: {
+    type: String,
+    maxlength: 1500
+  },
+  home: {
+    type: String,
+    maxlength: 1500
+  },
+  recipe: {
+    type: String,
+    maxlength: 1500
   }
 })
 
 module.exports = mongoose.model('member', memberSchema);
-
-
-//       country: '', region: '',
-//       biography: '', hobby: '', achievements: '', rewards: '', trips: '', books: '', sport: '', music: '',
-//       cinema: '', games: '', schoolmates: '', firstlove: '', student: '', profession: '', home: '', recipe: ''

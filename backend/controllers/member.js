@@ -1,4 +1,3 @@
-
 const Member = require('../models/member');
 const FileService = require('../services/FileService');
 const ValidationError = require('../errors/ValidationError');
