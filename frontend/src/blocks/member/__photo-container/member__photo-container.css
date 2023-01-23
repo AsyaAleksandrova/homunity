@@ -1,0 +1,12 @@
+.member__photo-container{
+   overflow: hidden;
+   position: absolute;
+   top: -90px;
+   left: 30px;
+   border: 2px solid var(--colorBackground);
+   width: 110px;
+   height: 140px;
+   border-radius: 5px;
+   background-color: var(--colorMain);
+   box-shadow: 5px 2px 15px var(--colorBackground);
+}

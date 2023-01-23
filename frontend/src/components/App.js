@@ -197,7 +197,7 @@ function App() {
         setCurrentUser({ ...currentUser, name: user.user.name, email: user.user.email, _id: user.user._id });
         setMyFamily(family);
         setLoggedIn(true);
-        history.push('/')
+        history.push('/');
       })
       .catch((e) => {
         localStorage.removeItem('user_id');
@@ -262,6 +262,8 @@ function App() {
           loggedIn={loggedIn}
           logOut={logOut}
           currentUser={currentUser}
+          myFamily={myFamily}
+          getAppData={getAppData}
           setIsInfoPopupOpen={setIsInfoPopupOpen}
           setInfoTitle={setInfoTitle}
           setInfoMessage={setInfoMessage}

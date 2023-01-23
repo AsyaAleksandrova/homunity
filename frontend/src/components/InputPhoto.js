@@ -3,7 +3,7 @@ import PopupAcceptDelete from './PopupAcceptDelete';
 
 function InputPhoto({ toggleInput, input, setInput, name, setIsInfoPopupOpen, setInfoTitle, setInfoMessage }) {
    const [PopupAcceptDeleteOpen, setPopupAcceptDeleteOpen] = useState(false);
-   const [url, setUrl] = useState('')
+   const [url, setUrl] = useState('');
    const fileReader = new FileReader();
 
    useEffect(() => { if (!input.size) { setUrl('') } }, [input]);

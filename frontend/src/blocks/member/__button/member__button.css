@@ -1,0 +1,11 @@
+.member__button{
+   background-color: transparent;
+   border: none;
+   cursor: pointer;
+   transition: all 0.5s ease;
+}
+
+.member__button:hover{
+   transform: scale(1.05);
+}
+

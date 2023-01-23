@@ -35,8 +35,13 @@
 @import url(./blocks/header/__username/header__username.css);
 @import url(./blocks/mypage/__family/mypage__family.css);
 @import url(./blocks/mypage/__family-list/mypage__family-list.css);
-@import url(./blocks/mypage/__family-item/mypage__family-item.css);
 @import url(./blocks/mypage/__title/mypage__title.css);
 @import url(./blocks/mypage/__family-add/mypage__family-add.css);
-@import url(./blocks/mypage/__person-photo/mypage__person-photo.css);
-@import url(./blocks/mypage/__person-button/mypage__person-button.css);
+
+
+@import url(./blocks/member/member.css);
+@import url(./blocks/member/__photo-container/member__photo-container.css);
+@import url(./blocks/member/__photo/member__photo.css);
+@import url(./blocks/member/__button-container/member__button-container.css);
+@import url(./blocks/member/__button/member__button.css);
+@import url(./blocks/member/__fio/member__fio.css);

@@ -1,9 +1,10 @@
-.mypage__family-item{
-   width: 225px;
+.member {
+   width: 200px;
    height: 120px;
    background-color: var(--colorMain);
    border-radius: 5px;
    margin-top: 120px;
    position: relative;
    list-style-type: none;
+   display: flex;
 }

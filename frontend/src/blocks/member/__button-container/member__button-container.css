@@ -1,0 +1,8 @@
+.member__button-container {
+   position: absolute;
+   right: 10px;
+   top: 10px;
+   display: flex;
+   flex-direction: column;
+   gap: 20px;
+}
