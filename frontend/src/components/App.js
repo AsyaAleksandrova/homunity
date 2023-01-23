@@ -3,6 +3,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
 import * as auth from '../utils/auth';
+import * as familyApi from '../utils/familyApi';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import ProtectedRoute from './ProtectedRoute';
 import Main from './Main';
@@ -27,6 +28,7 @@ function App() {
   const isOpen = isLoginPopupOpen || isRegisterPopupOpen || isInfoPopupOpen;
   const [currentUser, setCurrentUser] = useState({name: '', email: '', _id: ''});
   const [loggedIn, setLoggedIn] = useState(false);
+  const [myFamily, setMyFamily] = useState({});
 
   const registerUser = ({ name, email, password}) => {
     return auth.register(name, email, password)
@@ -57,11 +59,10 @@ function App() {
     return auth.login(email, password)
       .then((res) => {
         localStorage.setItem('user_id', res.user._id );
-        setCurrentUser({ ...currentUser, name: res.user.name, email: res.user.email, _id: res.user._id });
-        setLoggedIn(true);
-        history.push('/');
         closeAllPopups();
-        setIsLoginPopupOpen(false);
+      })
+      .then(() => {
+        getAppData();
       })
       .catch((e) => {
        closeAllPopups();
@@ -125,7 +126,6 @@ function App() {
         setIsInfoPopupOpen(true);
       })
       .catch((e) => {
-        console.log(e)
         closeAllPopups();
         setInfoTitle('Восстановление пароля');
         switch(e.status) {
@@ -146,7 +146,6 @@ function App() {
         setIsNewPassPopupOpen(true);
       })
       .catch((e) => {
-        console.log(e)
         closeAllPopups();
         setInfoTitle('Изменение пароля');
         switch(e.status) {
@@ -166,16 +165,15 @@ function App() {
       .then((res) => {
         localStorage.removeItem('email');
         localStorage.setItem('user_id', res.user._id );
-        setCurrentUser({name: res.user.name, email: res.user.email, _id: res.user._id});
-        setLoggedIn(true);
-        history.push('/');
         closeAllPopups();
         setInfoTitle('Изменение пароля');
         setInfoMessage('Пароль успешно изменен.');
         setIsInfoPopupOpen(true);
       })
+      .then(() => {
+        getAppData();
+      })
       .catch((e) => {
-        console.log(e)
         closeAllPopups();
         localStorage.removeItem('email');
         localStorage.removeItem('user_id');
@@ -194,9 +192,10 @@ function App() {
   }
 
   const getAppData = () => {
-    return auth.checkToken(localStorage.getItem('user_id'))
-      .then((res) => {
-        setCurrentUser({ ...currentUser, name: res.user.name, email: res.user.email, _id: res.user._id });
+    Promise.all([auth.checkToken(localStorage.getItem('user_id')), familyApi.getMyFamily()])
+      .then(([user, family]) => {
+        setCurrentUser({ ...currentUser, name: user.user.name, email: user.user.email, _id: user.user._id });
+        setMyFamily(family);
         setLoggedIn(true);
         history.push('/')
       })

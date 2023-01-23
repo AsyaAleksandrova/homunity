@@ -30,3 +30,16 @@ export const saveMemberPhoto = ({file, parent}) => {
             return Promise.reject(response);
          })
 };
+
+export const getMyFamily = () => {
+   return fetch(`${BASE_URL}/member/family`, {
+      method: 'GET',
+      credentials: 'include'
+   })
+      .then((response) => {
+         if (response.ok) {    
+            return response.json();
+         }
+            return Promise.reject(response);
+         })
+};

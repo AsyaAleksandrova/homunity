@@ -127,7 +127,7 @@ function EditMemberPopup({ isOpen, onClose, member,  onSubmit, newOne, setIsInfo
          (!nameError && blurName) &&
          ((!surnameError ) || !addSurname) &&
          ((!patronymicError ) || !addPatronymic) &&
-         (!dateError && blurBirth && (yearsOfLifeEnd.tillNow === true || !blurDeath)) &&
+         (!dateError && blurBirth && (yearsOfLifeEnd.tillNow === true || blurDeath)) &&
          (!genderError && blurGender)
       ) {
          setDisableButton(false)

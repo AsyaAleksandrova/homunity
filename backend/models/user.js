@@ -31,6 +31,10 @@ const userSchema = new mongoose.Schema({
   refreshlink: {
     type: String,
   },
+  avatar: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'file'
+  }
 });
 
 module.exports = mongoose.model('user', userSchema);
