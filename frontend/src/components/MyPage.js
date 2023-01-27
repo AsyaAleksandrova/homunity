@@ -7,8 +7,7 @@ import PopupEditMember from './PopupEditMember';
 import * as familyApi from '../utils/familyApi';
 import Member from './Member';
 
-
-function MyPage({loggedIn, logOut, currentUser, myFamily, getAppData, setIsInfoPopupOpen, setInfoTitle, setInfoMessage}) {
+function MyPage({loggedIn, logOut, myFamily, getAppData, openPopupInfo}) {
   const [isNewMemberPopupOpen, setNewMemberPopupOpen] = useState(false);
   const [member, setMember] = useState({});
   const [newOne, setNewOne] = useState(true);
@@ -42,15 +41,13 @@ function MyPage({loggedIn, logOut, currentUser, myFamily, getAppData, setIsInfoP
       })
       .catch((e) => {
         setNewMemberPopupOpen(false);
-        setInfoTitle('Ошибка сохранения');
         switch(e.status) {
-          case 400: setInfoMessage('Переданые некорректные данные при создании карточки.');
+          case 400: openPopupInfo('Ошибка сохранения', 'Переданые некорректные данные при создании карточки.');
             break;
-          default: setInfoMessage('Что-то пошло не так. Попробуйте повторить запрос.');
+          default: openPopupInfo('Ошибка сохранения', 'Что-то пошло не так. Попробуйте повторить запрос.');
             console.log(e)
             break;
         }
-        setIsInfoPopupOpen(true);
       });
   }
 
@@ -60,12 +57,29 @@ function MyPage({loggedIn, logOut, currentUser, myFamily, getAppData, setIsInfoP
   };
 
   function deleteMember(member) {
-    
+
+    return familyApi.deleteMember(member._id)
+      .then((res) => {
+        console.log(res);
+      })
+      .then(() => {
+        getAppData();
+      })
+      .catch((e) => {
+        setNewMemberPopupOpen(false);
+        switch (e.status) {
+          case 403: openPopupInfo('Ошибка удаления', 'Отсутствуют права на удаление карточки.');
+            break;
+          default: openPopupInfo('Ошибка удаления', 'Что-то пошло не так. Попробуйте повторить запрос.');
+            console.log(e)
+            break;
+        }
+      })
   }  
 
   return (
     <main className="root">
-      <Header loggedIn={loggedIn} logOut={logOut} currentUser={ currentUser } />
+      <Header loggedIn={loggedIn} logOut={logOut} />
       <section className="mypage">
         <div className='mypage__family'>
           <h2 className='mypage__title'>Моя семья</h2>
@@ -73,6 +87,7 @@ function MyPage({loggedIn, logOut, currentUser, myFamily, getAppData, setIsInfoP
             {myFamily.map((member) => (  
             <Member
               member={member}
+              onDelete={deleteMember}
               key={member._id} />
             ))}
             <li className='mypage__family-add'>
@@ -86,9 +101,7 @@ function MyPage({loggedIn, logOut, currentUser, myFamily, getAppData, setIsInfoP
           member={member}
           onSubmit={saveMember}
           newOne={newOne}
-          setIsInfoPopupOpen={setIsInfoPopupOpen}
-          setInfoTitle={setInfoTitle}
-          setInfoMessage={setInfoMessage}
+          openPopupInfo={openPopupInfo}
         />
       </section>
      </main>

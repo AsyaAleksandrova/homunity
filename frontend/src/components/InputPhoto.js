@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PopupAcceptDelete from './PopupAcceptDelete';
 
-function InputPhoto({ toggleInput, input, setInput, name, setIsInfoPopupOpen, setInfoTitle, setInfoMessage }) {
+function InputPhoto({ toggleInput, input, setInput, name, openPopupInfo }) {
    const [PopupAcceptDeleteOpen, setPopupAcceptDeleteOpen] = useState(false);
    const [url, setUrl] = useState('');
    const fileReader = new FileReader();
@@ -20,9 +20,7 @@ function InputPhoto({ toggleInput, input, setInput, name, setIsInfoPopupOpen, se
             setInput(file)
             fileReader.readAsDataURL(file);
          } else {
-            setInfoTitle('Ошибка загрузки файла');
-            setInfoMessage('Превышен максимально допустимый размер изображения. Пожалуйста, воспользуйтесь бесплатными онлайн-сервисами для сжатия изображений');
-            setIsInfoPopupOpen(true);
+            openPopupInfo('Ошибка загрузки файла', 'Превышен максимально допустимый размер изображения. Пожалуйста, воспользуйтесь бесплатными онлайн-сервисами для сжатия изображений');
          }
       }
    }

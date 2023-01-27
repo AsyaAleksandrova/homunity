@@ -34,24 +34,20 @@ function App() {
     return auth.register(name, email, password)
       .then((res) => {
         closeAllPopups();
-        setInfoTitle('Регистрация прошла успешно');
-        setInfoMessage(`Мы отправили вам письмо на адрес ${res.user.email}. 
+        openPopupInfo('Регистрация прошла успешно', `Мы отправили вам письмо на адрес ${res.user.email}. 
         Просьба перейти по ссылке для подтверждения адреса почты и активации аккаунта.
         Мы не хотим терять с вами связь на случай утраты пароля.`);
-        setIsInfoPopupOpen(true);
       })
       .catch((e) => {
         closeAllPopups();
-        setInfoTitle('Ошибка регистрации');
         switch(e.status) {
-          case 409: setInfoMessage('Пользователь с таким email уже зарегистрирован.');
+          case 409: openPopupInfo('Ошибка регистрации', 'Пользователь с таким email уже зарегистрирован.');
             break;
-          case 400: setInfoMessage('Переданые некорректные данные при создании пользователя.');
+          case 400: openPopupInfo('Ошибка регистрации', 'Переданые некорректные данные при создании пользователя.');
             break;
-          default: setInfoMessage('Что-то пошло не так. Попробуйте повторить запрос.');
+          default: openPopupInfo('Ошибка регистрации', 'Что-то пошло не так. Попробуйте повторить запрос.');
             break;
         }
-        setIsInfoPopupOpen(true);
       });
   }
 
@@ -66,16 +62,14 @@ function App() {
       })
       .catch((e) => {
        closeAllPopups();
-        setInfoTitle('Ошибка входа');
         switch(e.status) {
-          case 401: setInfoMessage('Некорректно указаны почта и/или пароль.');
+          case 401: openPopupInfo('Ошибка входа', 'Некорректно указаны почта и/или пароль.');
             break;
-          case 403: setInfoMessage('Для продолжения перейдите по направленной ссылке для подтвеждения email. Мы отправили ссылку повторно.');
+          case 403: openPopupInfo('Ошибка входа', 'Для продолжения перейдите по направленной ссылке для подтвеждения email. Мы отправили ссылку повторно.');
             break;          
-          default: setInfoMessage('Что-то пошло не так. Попробуйте повторить запрос.');
+          default: openPopupInfo('Ошибка входа', 'Что-то пошло не так. Попробуйте повторить запрос.');
             break;
         }
-        setIsInfoPopupOpen(true);
       });
   }
 
@@ -87,9 +81,7 @@ function App() {
         setLoggedIn(false);
       })
       .catch((e) => {
-        setInfoTitle('Ошибка');
-        setInfoMessage('Что-то пошло не так. Попробуйте повторить запрос.');
-        setIsInfoPopupOpen(true);
+        openPopupInfo('Ошибка', 'Что-то пошло не так. Попробуйте повторить запрос.');
       })
   } 
 
@@ -97,23 +89,19 @@ function App() {
     return auth.checkToken(id)
       .then((res) => {
         localStorage.setItem('user_id', res.user._id );    
-        setInfoTitle('Регистрация завершена');
-        setInfoMessage('Ваш Email подтвержден. Спасибо за регистрацию на сайте!');
-        setIsInfoPopupOpen(true);
+        openPopupInfo('Регистрация завершена', 'Ваш Email подтвержден. Спасибо за регистрацию на сайте!');
       })
       .then(() => {
         getAppData();
       })
       .catch((e) => {
         history.push('/main');
-        setInfoTitle('Регистрация завершена');
         switch(e.status) {
-          case 401: setInfoMessage('Необходима авторизация.');
+          case 401: openPopupInfo('Регистрация завершена', 'Необходима авторизация.');
             break;
-          default: setInfoMessage('Что-то пошло не так. Попробуйте повторить запрос.');
+          default: openPopupInfo('Ошибка подтверждения', 'Что-то пошло не так. Попробуйте повторить запрос.');
             break;
         }
-        setIsInfoPopupOpen(true);
       });
   }
   
@@ -121,20 +109,16 @@ function App() {
     return auth.refreshLink(email)
       .then((res) => {
         closeAllPopups();
-        setInfoTitle('Восстановление пароля');
-        setInfoMessage('На указанную почту отправлена ссылка для восстановления пароля.');
-        setIsInfoPopupOpen(true);
+        openPopupInfo('Восстановление пароля', 'На указанную почту отправлена ссылка для восстановления пароля.');
       })
       .catch((e) => {
         closeAllPopups();
-        setInfoTitle('Восстановление пароля');
         switch(e.status) {
-          case 404: setInfoMessage('Проверьте корректность указанного адреса почты.');
+          case 404: openPopupInfo('Ошибка восстановления пароля', 'Проверьте корректность указанного адреса почты.');
             break;
-          default: setInfoMessage('Что-то пошло не так. Попробуйте повторить запрос.');
+          default: openPopupInfo('Ошибка восстановления пароля', 'Что-то пошло не так. Попробуйте повторить запрос.');
             break;
         }
-        setIsInfoPopupOpen(true);
       });
   }
 
@@ -147,14 +131,13 @@ function App() {
       })
       .catch((e) => {
         closeAllPopups();
-        setInfoTitle('Изменение пароля');
+        setInfoTitle();
         switch(e.status) {
-          case 404: setInfoMessage('Некорректная ссылка.');
+          case 404: openPopupInfo('Ошибка изменения пароля', 'Некорректная ссылка.');
             break;         
-          default: setInfoMessage('Что-то пошло не так. Попробуйте повторить запрос.');
+          default: openPopupInfo('Ошибка изменения пароля', 'Что-то пошло не так. Попробуйте повторить запрос.');
             break;
         }
-        setIsInfoPopupOpen(true);
       });
   }
 
@@ -166,9 +149,7 @@ function App() {
         localStorage.removeItem('email');
         localStorage.setItem('user_id', res.user._id );
         closeAllPopups();
-        setInfoTitle('Изменение пароля');
-        setInfoMessage('Пароль успешно изменен.');
-        setIsInfoPopupOpen(true);
+        openPopupInfo('Изменение пароля', 'Пароль успешно изменен.');
       })
       .then(() => {
         getAppData();
@@ -177,17 +158,15 @@ function App() {
         closeAllPopups();
         localStorage.removeItem('email');
         localStorage.removeItem('user_id');
-        setInfoTitle('Изменение пароля');
         switch(e.status) {
-          case 404: setInfoMessage('Некорректная ссылка.');
+          case 404: openPopupInfo('Ошибка изменения пароля', 'Некорректная ссылка.');
             break;
-          case 400: setInfoMessage('Указаны некорректные параметры при изменении данных пользователя.');
+          case 400: openPopupInfo('Ошибка изменения пароля', 'Указаны некорректные параметры при изменении данных пользователя.');
             break;          
-          default: setInfoMessage('Что-то пошло не так. Попробуйте повторить запрос.');
+          default: openPopupInfo('Ошибка изменения пароля', 'Что-то пошло не так. Попробуйте повторить запрос.');
             break;
         }
         history.push('/main');
-        setIsInfoPopupOpen(true);
       });      
   }
 
@@ -203,9 +182,7 @@ function App() {
         localStorage.removeItem('user_id');
         history.push('/main')
         setIsPopupRegisterOpen(false);
-        setInfoTitle('Ошибка получения данных о пользователе. Необходима авторизация.');
-        setInfoMessage('Что-то пошло не так. Попробуйте повторить запрос.');
-        setIsInfoPopupOpen(true);
+        setInfoMessage('Ошибка получения данных о пользователе.', 'Что-то пошло не так. Попробуйте повторить запрос.');
       }); 
   }
 
@@ -228,7 +205,13 @@ function App() {
   const handleRefreshClick = () => {
     closeAllPopups();
     setIsPopupRefreshPassOpen(true);
-  }  
+  }
+
+  const openPopupInfo = (title, message) => {
+    setInfoTitle(title);
+    setInfoMessage(message);
+    setIsInfoPopupOpen(true);
+  }
    
   const closeAllPopups = () => {
     setIsPopupLoginOpen(false);
@@ -261,12 +244,9 @@ function App() {
           exact path="/"
           loggedIn={loggedIn}
           logOut={logOut}
-          currentUser={currentUser}
           myFamily={myFamily}
           getAppData={getAppData}
-          setIsInfoPopupOpen={setIsInfoPopupOpen}
-          setInfoTitle={setInfoTitle}
-          setInfoMessage={setInfoMessage}
+          openPopupInfo={openPopupInfo}
           component={MyPage}
         /> 
 

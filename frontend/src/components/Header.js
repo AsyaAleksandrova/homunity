@@ -6,10 +6,12 @@ import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import { faBell } from '@fortawesome/free-regular-svg-icons';
 import { faDoorOpen } from '@fortawesome/free-solid-svg-icons';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
-function Header({ loggedIn, logOut, currentUser }) {
+function Header({ loggedIn, logOut }) {
    const className = `header ${!loggedIn && 'header_hidden'}`;
    const [search, setSearch, handleChangeSearch] = useForm('');
+   const currentUser = React.useContext(CurrentUserContext);
 
    return (
       <header className={className}>
@@ -17,15 +19,14 @@ function Header({ loggedIn, logOut, currentUser }) {
             <div className='header__logo'></div>
             <form className='header__form'>
                <input onChange={handleChangeSearch} value={search} type="text" name="search" className='header__search' placeholder='...поиск по профилю' />
-               <button type="button" className="header__submit"><FontAwesomeIcon icon={faMagnifyingGlass} style={{ color: '#394650' }} transform="grow-5" /></button>
+               <FontAwesomeIcon className="header__submit" icon={faMagnifyingGlass} style={{ color: '#394650' }} transform="grow-5" />
             </form>
-            <button type='button' className='header__button'><FontAwesomeIcon icon={faBell} style={{ color: '#394650' }} transform="grow-5" /></button>
+            <FontAwesomeIcon className='header__button' icon={faBell} style={{ color: '#394650' }} transform="grow-5" />
          </div>
          <div className='header__menu'>
             <p className='header__username'>{ currentUser.name }</p>
-            <button type='button' className='header__button'><FontAwesomeIcon icon={faCircleUser} style={{ color: '#394650' }} transform="grow-15" /></button>
-            <button onClick={logOut} type='button' className='header__button'><FontAwesomeIcon icon={faDoorOpen} style={{ color: '#394650' }} transform="grow-10" /></button>
-            
+            <FontAwesomeIcon className='header__button' icon={faCircleUser} style={{ color: '#394650' }} transform="grow-15" />
+            <FontAwesomeIcon onClick={logOut} className='header__button' icon={faDoorOpen} style={{ color: '#394650' }} transform="grow-10" /> 
          </div>
          
       </header>

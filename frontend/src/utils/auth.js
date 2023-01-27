@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://localhost:3001';
+const BASE_URL = 'http://localhost:3001';
 
 export const register = (name, email, password) => {
    return fetch(`${BASE_URL}/auth/signup`, {

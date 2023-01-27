@@ -63,7 +63,7 @@
 }
 
 .popup__person-input_photo-label {
-   width: 50px;
+   width: 55px;
    height: 70px;
    border: 1px solid var(--colorBackground);
    border-radius: 7px;
@@ -76,7 +76,7 @@
 .popup__person-input_photo-preview{
    object-fit: cover;
    object-position: center;
-   width: 50px;
+   width: 55px;
    height: 70px;
 }
 

@@ -5,13 +5,13 @@ import { faBinoculars } from '@fortawesome/free-solid-svg-icons';
 import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
 import { faUserMinus } from '@fortawesome/free-solid-svg-icons';
 
-function Member({member}) {
+function Member({member, onDelete}) {
    const [url, setUrl] = useState('');
    const [fio, setFio] = useState('')
    
    useEffect(() => {
       setFio(`${member.surname + ' ' + member.name + ' ' + member.patronymic}`)
-      if(member.photo){setUrl(member.photo.path)}
+      if(member.photo){setUrl(`${member.photo.path}`)}
    }, [])
 
    function handleCardOpen() {
@@ -23,7 +23,7 @@ function Member({member}) {
    }
 
    function handleCardDelete() {
-      console.log('ooops')
+      onDelete(member);
    }
 
    return (
@@ -34,9 +34,9 @@ function Member({member}) {
          
          <p className="member__fio">{ fio }</p>
             <div className='member__button-container'>
-            <button type='button' onClick={handleCardOpen} className='member__button'><FontAwesomeIcon icon={faBinoculars} style={{ color: '#394650' }} transform="grow-10" /></button>
-            <button type='button' onClick={handleCardEdit} className='member__button'><FontAwesomeIcon icon={faPenToSquare} style={{ color: '#394650' }} transform="grow-10" /></button>
-            <button type='button' onClick={handleCardDelete} className='member__button'><FontAwesomeIcon icon={faUserMinus} style={{ color: '#969BA2' }} transform="grow-10" /></button>
+            <FontAwesomeIcon onClick={handleCardOpen} className='member__button' icon={faBinoculars} style={{ color: '#394650' }} transform="grow-10" />
+            <FontAwesomeIcon onClick={handleCardEdit} className='member__button' icon={faPenToSquare} style={{ color: '#394650' }} transform="grow-10" />
+            <FontAwesomeIcon onClick={handleCardDelete} className='member__button' icon={faUserMinus} style={{ color: '#969BA2' }} transform="grow-10" />
          </div>
       </li>
    );

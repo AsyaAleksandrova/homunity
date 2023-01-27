@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://localhost:3001';
+const BASE_URL = 'http://localhost:3001';
 
 export const createNewMember = ({...props}) => {
    return fetch(`${BASE_URL}/member/create`, {
@@ -43,3 +43,16 @@ export const getMyFamily = () => {
             return Promise.reject(response);
          })
 };
+
+export const deleteMember = (_id) => {
+   return fetch(`${BASE_URL}/member/one/${_id}`, {
+      method: 'DELETE',
+      credentials: 'include'
+   })
+      .then((response) => {
+         if (response.ok) {    
+            return response.json();
+         }
+            return Promise.reject(response);
+         })   
+}

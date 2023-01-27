@@ -10,7 +10,7 @@ import InputDate from './InputDate'
 import InputOptionalText from './InputOptionalText';
 import InputPhoto from './InputPhoto';
 
-function PopupEditMember({ isOpen, onClose, member,  onSubmit, newOne, setIsInfoPopupOpen, setInfoTitle, setInfoMessage }) {
+function PopupEditMember({ isOpen, onClose, member,  onSubmit, newOne, openPopupInfo }) {
    const title = `${newOne ? 'Новая карточка члена семьи' : 'Редактирование карточки'} `
    const [btnName, setBtnName] = useState('Сохранить');
    const [disableButton, setDisableButton] = useState(true);
@@ -246,7 +246,7 @@ function PopupEditMember({ isOpen, onClose, member,  onSubmit, newOne, setIsInfo
                </div>
                <div className='popup__person_input_block'>
                   {addPhoto &&
-                     <InputPhoto toggleInput={togglePhoto} input={photo} setInput={setPhoto} name='Фото' setIsInfoPopupOpen={setIsInfoPopupOpen} setInfoTitle={setInfoTitle} setInfoMessage={setInfoMessage} />}
+                     <InputPhoto toggleInput={togglePhoto} input={photo} setInput={setPhoto} name='Фото' openPopupInfo={openPopupInfo} />}
                   {addSurname &&
                      <InputShortText input={surname} handleChangeInput={handleChangeSurname} name='Фамилия' required={false} toggleInput={toggleSurname}
                         inputError={surnameError} checkInputError={checkSurnameError} blurInput={blurSurname} setBlurInput={setBlurSurname} />}   
